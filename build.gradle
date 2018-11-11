@@ -1,25 +1,68 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+sourceSets {
+    test {
+        // Compiled Java classes should use this directory
+        java.outputDir = file('out/test/classes')
+    }
+}
+
+mainClassName = 'com.greatworksinc.tilegame.Main'
 group 'com.greatworksinc'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-apply plugin: 'application'
-
 sourceCompatibility = 1.8
-
-mainClassName = "com.greatworksinc.tilegame.Main"
 
 repositories {
     mavenCentral()
 }
 
+ext {
+    slf4jVersion = '1.7.25'
+    guavaVersion = '27.0-jre'
+    guiceVersion = '4.2.2'
+    findbugsVersion = '3.0.2'
+    junitPlatformVersion = '1.3.1'
+    junitJupiterVersion = '5.3.1'
+    mockitoVersion = '2.23.0'
+    truthVersion = '0.42'
+}
+
 dependencies {
-    compile 'org.slf4j:slf4j-simple:1.7.21'
-    compile 'com.google.guava:guava:23.0'
-    compile 'com.google.inject:guice:4.1.0'
-    compile 'com.google.inject.extensions:guice-assistedinject:4.1.0'
-    compile 'com.google.code.findbugs:jsr305:3.0.1'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.13.0'
-    testCompile 'com.google.truth:truth:0.30'
-    testCompile 'com.google.guava:guava-testlib:23.0'
+    // commons
+    compile "org.slf4j:slf4j-simple:${slf4jVersion}"
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "com.google.inject:guice:${guiceVersion}"
+    compile "com.google.inject.extensions:guice-assistedinject:${guiceVersion}"
+    compile "com.google.code.findbugs:jsr305:${findbugsVersion}"
+
+    // test dependencies
+
+    // junit platform
+    testCompile "org.junit.platform:junit-platform-engine:${junitPlatformVersion}"
+    testCompile "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
+
+    // junit jupiter
+    testCompile "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+
+    // mockito
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
+    testCompile "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
+
+    // truth
+    testCompile "com.google.truth:truth:${truthVersion}"
+
+    // test equality
+    testCompile "com.google.guava:guava-testlib:${guavaVersion}"
+}
+
+jar {
+    baseName = 'game-tile'
+    version = '1.0.0'
+}
+test {
+    useJUnitPlatform()
 }

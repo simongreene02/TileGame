@@ -12,8 +12,9 @@ public class MainPanel extends JPanel {
   private static final Logger log = LoggerFactory.getLogger(MainPanel.class);
 
   @Inject
-  public MainPanel(LayoutManager layout) {
+  public MainPanel(LayoutManager layout, GamePanel panel) {
     setLayout(layout);
+    add(panel);
     log.info("init");
   }
 
