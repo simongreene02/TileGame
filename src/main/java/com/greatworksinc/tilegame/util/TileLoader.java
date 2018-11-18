@@ -29,6 +29,11 @@ public class TileLoader {
     return tiles;
   }
 
+  public BufferedImage getTile(int tileID) {
+    //TODO: Add input validation.
+    return tiles.get(tileID-1);
+  }
+
   private static ImmutableList<BufferedImage> createTiles(BufferedImage bigImg, int width, int height) {
     ImmutableList.Builder<BufferedImage> tiles = ImmutableList.builder();
     for (int y = 0; y < bigImg.getHeight(); y += height) {
