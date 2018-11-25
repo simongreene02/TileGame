@@ -8,15 +8,23 @@ import com.greatworksinc.tilegame.annotations.Height;
 import com.greatworksinc.tilegame.annotations.Width;
 import com.greatworksinc.tilegame.gui.MainFrame;
 import com.greatworksinc.tilegame.gui.MainPanel;
+import com.greatworksinc.tilegame.model.GridLocation;
+import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.util.MoreResources;
 import com.greatworksinc.tilegame.util.TileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.xml.stream.Location;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class TileGameModule extends PrivateModule {
   private static final Logger log = LoggerFactory.getLogger(TileGameModule.class);
@@ -62,5 +70,31 @@ public class TileGameModule extends PrivateModule {
   private URL provideURL() {
     log.info("provideURL");
     return MoreResources.getResource("Castle2.png");
+  }
+
+  @Provides
+  @Singleton
+  private GridSize provideGridSize() {
+    log.info("provideGridSize");
+    URL tileUrl = MoreResources.getResource("Castle2_Layer1.csv");
+    Scanner scanner = null;
+    try {
+      scanner = new Scanner(Paths.get(tileUrl.toURI()));
+      scanner.useDelimiter(",");
+    } catch (URISyntaxException | IOException e) {
+      throw new RuntimeException(e);
+    }
+    int row = 0;
+    int col = 0;
+    while (scanner.hasNext()) {
+      String next = scanner.next();
+      if (next.indexOf('\n') != -1) {
+        row++;
+        col = 0;
+        next = next.substring(1);
+      }
+      col++;
+    }
+    return new GridSize(row, col);
   }
 }

@@ -31,6 +31,9 @@ public class TileLoader {
 
   public BufferedImage getTile(int tileID) {
     //TODO: Add input validation.
+    if (tileID < 1 || tileID > tiles.size()) {
+      throw new IllegalArgumentException("TileID must be between 1 and " + tiles.size() + ".");
+    }
     return tiles.get(tileID-1);
   }
 
