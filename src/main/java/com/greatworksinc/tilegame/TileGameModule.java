@@ -97,4 +97,33 @@ public class TileGameModule extends PrivateModule {
     }
     return new GridSize(row, col);
   }
+
+  //TODO: Add provider that returns hashmap of grid locations as keys and tiles as values.
+  @Provides
+  @Singleton
+  private HashMap<GridLocation, Integer> provideTileMap() {
+    log.info("provideTileMap");
+    HashMap<GridLocation, Integer> output = new HashMap<>();
+    URL tileUrl = MoreResources.getResource("Castle2_Layer1.csv");
+    Scanner scanner = null;
+    try {
+      scanner = new Scanner(Paths.get(tileUrl.toURI()));
+      scanner.useDelimiter(",");
+    } catch (URISyntaxException | IOException e) {
+      throw new RuntimeException(e);
+    }
+    int row = 0;
+    int col = 0;
+    while (scanner.hasNext()) {
+      String next = scanner.next();
+      if (next.indexOf('\n') != -1) {
+        row++;
+        col = 0;
+        next = next.substring(1);
+      }
+      output.put(new GridLocation(row, col), Integer.parseInt(next));
+      col++;
+    }
+    return output;
+  }
 }
