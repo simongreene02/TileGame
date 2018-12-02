@@ -1,6 +1,7 @@
 package com.greatworksinc.tilegame.util;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.assistedinject.Assisted;
 import com.greatworksinc.tilegame.annotations.Height;
 import com.greatworksinc.tilegame.annotations.Width;
 
@@ -15,7 +16,7 @@ public class TileLoader {
   private final ImmutableList<BufferedImage> tiles;
   private final int numOfTilesPerRow;
   @Inject
-  public TileLoader(URL tilesURL, @Width int width, @Height int height) {
+  public TileLoader(@Assisted URL tilesURL, @Width int width, @Height int height) {
     try {
       BufferedImage bigImg = ImageIO.read(tilesURL);
       numOfTilesPerRow = bigImg.getWidth() / width;

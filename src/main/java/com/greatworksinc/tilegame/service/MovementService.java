@@ -12,10 +12,17 @@ import java.awt.*;
 import static java.awt.event.KeyEvent.*;
 
 public class MovementService {
+
   private static final Logger log = LoggerFactory.getLogger(MovementService.class);
-  //@Inject
+  private final GridSize gridSize;
+
+  @Inject
+  public MovementService(GridSize gridSize) {
+    this.gridSize = gridSize;
+  }
+
   public boolean move(Point position, int keyCode) {//, GridSize gridSize) {
-    GridSize gridSize = new GridSize(8, 8);
+    //GridSize gridSize = new GridSize(10, 10);
     switch (keyCode) {
       case VK_UP:
         if (position.y > 0) {
@@ -25,7 +32,7 @@ public class MovementService {
           return false;
         }
       case VK_DOWN:
-        if (position.y <= gridSize.getNumOfRows()) {
+        if (position.y < gridSize.getNumOfRows() - 1) {
           position.y++;
           return true;
         } else {
@@ -39,7 +46,7 @@ public class MovementService {
           return false;
         }
       case VK_RIGHT:
-        if (position.x <= gridSize.getNumOfCols()) {
+        if (position.x < gridSize.getNumOfCols() - 1) {
           position.x++;
           return true;
         } else {

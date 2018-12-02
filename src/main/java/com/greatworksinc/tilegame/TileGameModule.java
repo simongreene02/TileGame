@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.PrivateModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.greatworksinc.tilegame.annotations.Castle;
 import com.greatworksinc.tilegame.annotations.Height;
 import com.greatworksinc.tilegame.annotations.Width;
 import com.greatworksinc.tilegame.gui.MainFrame;
@@ -12,6 +14,7 @@ import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.util.MoreResources;
 import com.greatworksinc.tilegame.util.TileLoader;
+import com.greatworksinc.tilegame.util.TileLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +33,7 @@ public class TileGameModule extends PrivateModule {
   private static final Logger log = LoggerFactory.getLogger(TileGameModule.class);
   @Override
   protected void configure() {
+    install(new FactoryModuleBuilder().build(TileLoader.class));
     bind(JPanel.class).to(MainPanel.class).in(Singleton.class);
     bind(JFrame.class).to(MainFrame.class);
     expose(JFrame.class);
@@ -44,10 +48,13 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  private ImmutableList<BufferedImage> provideTiles(TileLoader tileLoader) {
+  @Castle
+  private ImmutableList<BufferedImage> provideTiles(@Castle URL url, TileLoaderFactory tileLoaderFactory) {
     log.info("provideTiles");
-    return tileLoader.getTiles();
+    return tileLoaderFactory.createTileLoader(url).getTiles();
   }
+
+  //TODO: Do same with @Character
 
   @Provides
   @Singleton
@@ -67,6 +74,7 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
+  @Castle
   private URL provideURL() {
     log.info("provideURL");
     return MoreResources.getResource("Castle2.png");
@@ -84,7 +92,7 @@ public class TileGameModule extends PrivateModule {
     } catch (URISyntaxException | IOException e) {
       throw new RuntimeException(e);
     }
-    int row = 0;
+    int row = 1;
     int col = 0;
     while (scanner.hasNext()) {
       String next = scanner.next();
@@ -95,6 +103,7 @@ public class TileGameModule extends PrivateModule {
       }
       col++;
     }
+    log.info("row = {}, col = {}", row, col);
     return new GridSize(row, col);
   }
 
