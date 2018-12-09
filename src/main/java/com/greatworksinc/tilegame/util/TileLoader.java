@@ -7,6 +7,7 @@ import com.greatworksinc.tilegame.annotations.Width;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -16,11 +17,11 @@ public class TileLoader {
   private final ImmutableList<BufferedImage> tiles;
   private final int numOfTilesPerRow;
   @Inject
-  public TileLoader(@Assisted URL tilesURL, @Width int width, @Height int height) {
+  public TileLoader(@Assisted URL tilesURL, @Assisted Dimension tileSize) {
     try {
       BufferedImage bigImg = ImageIO.read(tilesURL);
-      numOfTilesPerRow = bigImg.getWidth() / width;
-      tiles = TileLoader.createTiles(bigImg, width, height);
+      numOfTilesPerRow = bigImg.getWidth() / tileSize.width;
+      tiles = TileLoader.createTiles(bigImg, tileSize.width, tileSize.height);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

@@ -6,6 +6,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.greatworksinc.tilegame.annotations.Castle;
+import com.greatworksinc.tilegame.annotations.Character;
 import com.greatworksinc.tilegame.annotations.Height;
 import com.greatworksinc.tilegame.annotations.Width;
 import com.greatworksinc.tilegame.gui.MainFrame;
@@ -33,7 +34,7 @@ public class TileGameModule extends PrivateModule {
   private static final Logger log = LoggerFactory.getLogger(TileGameModule.class);
   @Override
   protected void configure() {
-    install(new FactoryModuleBuilder().build(TileLoader.class));
+    install(new FactoryModuleBuilder().build(TileLoaderFactory.class));
     bind(JPanel.class).to(MainPanel.class).in(Singleton.class);
     bind(JFrame.class).to(MainFrame.class);
     expose(JFrame.class);
@@ -49,12 +50,18 @@ public class TileGameModule extends PrivateModule {
   @Provides
   @Singleton
   @Castle
-  private ImmutableList<BufferedImage> provideTiles(@Castle URL url, TileLoaderFactory tileLoaderFactory) {
-    log.info("provideTiles");
-    return tileLoaderFactory.createTileLoader(url).getTiles();
+  private TileLoader provideCastleTiles(@Castle URL url, @Castle Dimension tileSize, TileLoaderFactory tileLoaderFactory) {
+    log.info("provideCastleTiles");
+    return tileLoaderFactory.createTileLoader(url, tileSize);
   }
 
-  //TODO: Do same with @Character
+  @Provides
+  @Singleton
+  @Character
+  private TileLoader provideCharacterTiles(@Character URL url, @Character Dimension tileSize, TileLoaderFactory tileLoaderFactory) {
+    log.info("provideCharacterTiles");
+    return tileLoaderFactory.createTileLoader(url, tileSize);
+  }
 
   @Provides
   @Singleton
@@ -75,9 +82,31 @@ public class TileGameModule extends PrivateModule {
   @Provides
   @Singleton
   @Castle
-  private URL provideURL() {
-    log.info("provideURL");
+  private Dimension provideCastleTileSize() {
+    return new Dimension(32, 32);
+  }
+
+  @Provides
+  @Singleton
+  @Character
+  private Dimension provideCharacterTileSize() {
+    return new Dimension(16, 16);
+  }
+
+  @Provides
+  @Singleton
+  @Castle
+  private URL provideCastleURL() {
+    log.info("provideCastleURL");
     return MoreResources.getResource("Castle2.png");
+  }
+
+  @Provides
+  @Singleton
+  @Character
+  private URL provideCharacterURL() {
+    log.info("provideCharacterURL");
+    return MoreResources.getResource("characters.png");
   }
 
   @Provides
@@ -107,7 +136,6 @@ public class TileGameModule extends PrivateModule {
     return new GridSize(row, col);
   }
 
-  //TODO: Add provider that returns hashmap of grid locations as keys and tiles as values.
   @Provides
   @Singleton
   private HashMap<GridLocation, Integer> provideTileMap() {

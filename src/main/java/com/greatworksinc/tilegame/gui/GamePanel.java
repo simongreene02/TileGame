@@ -1,6 +1,7 @@
 package com.greatworksinc.tilegame.gui;
 
-import com.greatworksinc.tilegame.TileGameModule;
+import com.greatworksinc.tilegame.annotations.Castle;
+import com.greatworksinc.tilegame.annotations.Character;
 import com.greatworksinc.tilegame.service.MovementService;
 import com.greatworksinc.tilegame.util.MoreResources;
 import com.greatworksinc.tilegame.util.TileLoader;
@@ -13,27 +14,25 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-import static java.awt.event.KeyEvent.*;
-
 public class GamePanel extends Abstract2DPanel {
 
   private static final Logger log = LoggerFactory.getLogger(GamePanel.class);
-  private final TileLoader tileLoader;
+  private final TileLoader castleTileLoader;
+  private final TileLoader characterTileLoader;
   private final MovementService movementService;
   private final Point playerPosition = new Point(4, 4);
   private KeyListener keyListener;
 
   @Inject
-  public GamePanel(TileLoader tileLoader, MovementService movementService) {
-    this.tileLoader = tileLoader;
+  public GamePanel(@Castle TileLoader castleTileLoader, @Character TileLoader characterTileLoader, MovementService movementService) {
+    this.castleTileLoader = castleTileLoader;
+    this.characterTileLoader = characterTileLoader;
     this.movementService = movementService;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
@@ -46,7 +45,7 @@ public class GamePanel extends Abstract2DPanel {
   }
 
   private void paintPlayer(Graphics2D g) {
-    drawSprite(g, tileLoader.getTile(234), playerPosition.y, playerPosition.x);
+    drawSprite(g, characterTileLoader.getTile(24), playerPosition.y, playerPosition.x);
   }
 
   private void paintTerrain(Graphics2D g) {
@@ -67,7 +66,7 @@ public class GamePanel extends Abstract2DPanel {
         col = 0;
         next = next.substring(1);
       }
-      drawSprite(g, tileLoader.getTile(Integer.parseInt(next)), row, col);
+      drawSprite(g, castleTileLoader.getTile(Integer.parseInt(next)), row, col);
       col++;
     }
   }
