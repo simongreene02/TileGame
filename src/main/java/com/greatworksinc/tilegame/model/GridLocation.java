@@ -43,4 +43,8 @@ public class GridLocation {
         .add("col", col)
         .toString();
   }
+
+  public static GridLocation of(int row, int col) {
+    return new GridLocation(row, col);
+  }
 }

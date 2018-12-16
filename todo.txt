@@ -1,0 +1,4 @@
+-Make readme
+-Add conditional logic for remaining directions.
+-Streamline move code.
+-Change ImmutableList to ImmutableSet.

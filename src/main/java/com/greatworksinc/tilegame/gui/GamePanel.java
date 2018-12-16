@@ -1,7 +1,8 @@
 package com.greatworksinc.tilegame.gui;
 
 import com.greatworksinc.tilegame.annotations.Castle;
-import com.greatworksinc.tilegame.annotations.Character;
+import com.greatworksinc.tilegame.annotations.CharacterSprite;
+import com.greatworksinc.tilegame.model.CharacterState;
 import com.greatworksinc.tilegame.service.MovementService;
 import com.greatworksinc.tilegame.util.MoreResources;
 import com.greatworksinc.tilegame.util.TileLoader;
@@ -26,16 +27,17 @@ public class GamePanel extends Abstract2DPanel {
   private final TileLoader castleTileLoader;
   private final TileLoader characterTileLoader;
   private final MovementService movementService;
-  private final Point playerPosition = new Point(4, 4);
+  private CharacterState player;
   private KeyListener keyListener;
 
   @Inject
-  public GamePanel(@Castle TileLoader castleTileLoader, @Character TileLoader characterTileLoader, MovementService movementService) {
+  public GamePanel(@Castle TileLoader castleTileLoader, @CharacterSprite TileLoader characterTileLoader, MovementService movementService) {
     this.castleTileLoader = castleTileLoader;
     this.characterTileLoader = characterTileLoader;
     this.movementService = movementService;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
+    player = new CharacterState();
   }
 
   @Override
@@ -45,7 +47,7 @@ public class GamePanel extends Abstract2DPanel {
   }
 
   private void paintPlayer(Graphics2D g) {
-    drawSprite(g, characterTileLoader.getTile(24), playerPosition.y, playerPosition.x);
+    drawSprite(g, characterTileLoader.getTile(player.getSpriteNumber()), player.position.y, player.position.x);
   }
 
   private void paintTerrain(Graphics2D g) {
@@ -83,7 +85,7 @@ public class GamePanel extends Abstract2DPanel {
   private class GameKeyListener extends KeyAdapter {
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-      movementService.move(playerPosition, keyEvent.getKeyCode());
+      movementService.move(player, keyEvent.getKeyCode());
       repaint();
     }
   }

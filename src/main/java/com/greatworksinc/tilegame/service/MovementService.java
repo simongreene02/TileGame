@@ -1,13 +1,17 @@
 package com.greatworksinc.tilegame.service;
 
-import com.greatworksinc.tilegame.gui.GamePanel;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.greatworksinc.tilegame.model.CharacterState;
+import com.greatworksinc.tilegame.model.Direction;
+import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.swing.text.Position;
-import java.awt.*;
+
+import java.util.HashMap;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -15,39 +19,69 @@ public class MovementService {
 
   private static final Logger log = LoggerFactory.getLogger(MovementService.class);
   private final GridSize gridSize;
+  private final ImmutableList<Integer> inaccessibleSprites;
+  private final ImmutableMap<GridLocation, Integer> tileMap;
 
   @Inject
-  public MovementService(GridSize gridSize) {
+  public MovementService(GridSize gridSize, ImmutableList<Integer> inaccessibleSprites, ImmutableMap<GridLocation, Integer> tileMap) {
     this.gridSize = gridSize;
+    this.inaccessibleSprites = inaccessibleSprites;
+    this.tileMap = tileMap;
   }
 
-  public boolean move(Point position, int keyCode) {//, GridSize gridSize) {
+  public boolean move(CharacterState characterState, int keyCode) {//, GridSize gridSize) {
     //GridSize gridSize = new GridSize(10, 10);
     switch (keyCode) {
       case VK_UP:
-        if (position.y > 0) {
-          position.y--;
+        if (characterState.position.y > 0) {
+          if (inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y-1, characterState.position.x)))) {
+            characterState.position.y--;
+          }
+          if (characterState.direction == Direction.NORTH) {
+            characterState.posture++;
+          } else {
+            characterState.direction = Direction.NORTH;
+            characterState.posture = 0;
+          }
           return true;
         } else {
           return false;
         }
       case VK_DOWN:
-        if (position.y < gridSize.getNumOfRows() - 1) {
-          position.y++;
+        if (characterState.position.y < gridSize.getNumOfRows() - 1) {
+          characterState.position.y++;
+          if (characterState.direction == Direction.SOUTH) {
+            characterState.posture++;
+          } else {
+            characterState.direction = Direction.SOUTH;
+            characterState.posture = 0;
+          }
           return true;
         } else {
           return false;
         }
       case VK_LEFT:
-        if (position.x > 0) {
-          position.x--;
+        if (characterState.position.x > 0) {
+          characterState.position.x--;
+          if (characterState.direction == Direction.WEST) {
+            characterState.posture++;
+          } else {
+            characterState.direction = Direction.WEST;
+            characterState.posture = 0;
+          }
           return true;
         } else {
           return false;
         }
       case VK_RIGHT:
-        if (position.x < gridSize.getNumOfCols() - 1) {
-          position.x++;
+        if (characterState.position.x < gridSize.getNumOfCols() - 1) {
+          characterState.position.x++;
+          if (characterState.direction == Direction.EAST) {
+            characterState.posture++;
+          } else {
+            characterState.direction = Direction.EAST;
+            characterState.posture = 0;
+          }
           return true;
         } else {
           return false;

@@ -1,12 +1,13 @@
 package com.greatworksinc.tilegame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.PrivateModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.greatworksinc.tilegame.annotations.Castle;
-import com.greatworksinc.tilegame.annotations.Character;
+import com.greatworksinc.tilegame.annotations.CharacterSprite;
 import com.greatworksinc.tilegame.annotations.Height;
 import com.greatworksinc.tilegame.annotations.Width;
 import com.greatworksinc.tilegame.gui.MainFrame;
@@ -20,14 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.xml.stream.Location;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class TileGameModule extends PrivateModule {
@@ -57,8 +55,8 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  @Character
-  private TileLoader provideCharacterTiles(@Character URL url, @Character Dimension tileSize, TileLoaderFactory tileLoaderFactory) {
+  @CharacterSprite
+  private TileLoader provideCharacterTiles(@CharacterSprite URL url, @CharacterSprite Dimension tileSize, TileLoaderFactory tileLoaderFactory) {
     log.info("provideCharacterTiles");
     return tileLoaderFactory.createTileLoader(url, tileSize);
   }
@@ -88,7 +86,7 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  @Character
+  @CharacterSprite
   private Dimension provideCharacterTileSize() {
     return new Dimension(16, 16);
   }
@@ -103,7 +101,7 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  @Character
+  @CharacterSprite
   private URL provideCharacterURL() {
     log.info("provideCharacterURL");
     return MoreResources.getResource("characters.png");
@@ -138,9 +136,9 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  private HashMap<GridLocation, Integer> provideTileMap() {
+  private ImmutableMap<GridLocation, Integer> provideTileMap() {
     log.info("provideTileMap");
-    HashMap<GridLocation, Integer> output = new HashMap<>();
+    ImmutableMap.Builder<GridLocation, Integer> output = ImmutableMap.builder();
     URL tileUrl = MoreResources.getResource("Castle2_Layer1.csv");
     Scanner scanner = null;
     try {
@@ -161,6 +159,13 @@ public class TileGameModule extends PrivateModule {
       output.put(new GridLocation(row, col), Integer.parseInt(next));
       col++;
     }
-    return output;
+    return output.build();
+  }
+
+  @Provides
+  @Singleton
+  private ImmutableList<Integer> provideInaccessibleSpriteIDs() {
+    log.info("provideInaccessibleSpriteIDs");
+    return ImmutableList.of(233);
   }
 }
