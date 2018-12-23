@@ -2,6 +2,7 @@ package com.greatworksinc.tilegame.service;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.greatworksinc.tilegame.model.CharacterState;
 import com.greatworksinc.tilegame.model.Direction;
 import com.greatworksinc.tilegame.model.GridLocation;
@@ -19,69 +20,46 @@ public class MovementService {
 
   private static final Logger log = LoggerFactory.getLogger(MovementService.class);
   private final GridSize gridSize;
-  private final ImmutableList<Integer> inaccessibleSprites;
+  private final ImmutableSet<Integer> inaccessibleSprites;
   private final ImmutableMap<GridLocation, Integer> tileMap;
 
   @Inject
-  public MovementService(GridSize gridSize, ImmutableList<Integer> inaccessibleSprites, ImmutableMap<GridLocation, Integer> tileMap) {
+  public MovementService(GridSize gridSize, ImmutableSet<Integer> inaccessibleSprites, ImmutableMap<GridLocation, Integer> tileMap) {
     this.gridSize = gridSize;
     this.inaccessibleSprites = inaccessibleSprites;
     this.tileMap = tileMap;
   }
 
-  public boolean move(CharacterState characterState, int keyCode) {//, GridSize gridSize) {
-    //GridSize gridSize = new GridSize(10, 10);
+  public boolean move(CharacterState characterState, int keyCode) {
     switch (keyCode) {
       case VK_UP:
-        if (characterState.position.y > 0) {
-          if (inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y-1, characterState.position.x)))) {
-            characterState.position.y--;
-          }
-          if (characterState.direction == Direction.NORTH) {
-            characterState.posture++;
-          } else {
-            characterState.direction = Direction.NORTH;
-            characterState.posture = 0;
-          }
+        handlePosture(characterState, Direction.NORTH);
+        if (characterState.position.y > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y-1, characterState.position.x)))) {
+          characterState.position.y--;
           return true;
         } else {
           return false;
         }
       case VK_DOWN:
-        if (characterState.position.y < gridSize.getNumOfRows() - 1) {
+        handlePosture(characterState, Direction.SOUTH);
+        if (characterState.position.y < gridSize.getNumOfRows() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y+1, characterState.position.x)))) {
           characterState.position.y++;
-          if (characterState.direction == Direction.SOUTH) {
-            characterState.posture++;
-          } else {
-            characterState.direction = Direction.SOUTH;
-            characterState.posture = 0;
-          }
           return true;
         } else {
           return false;
         }
       case VK_LEFT:
-        if (characterState.position.x > 0) {
+        handlePosture(characterState, Direction.WEST);
+        if (characterState.position.x > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y, characterState.position.x-1)))) {
           characterState.position.x--;
-          if (characterState.direction == Direction.WEST) {
-            characterState.posture++;
-          } else {
-            characterState.direction = Direction.WEST;
-            characterState.posture = 0;
-          }
           return true;
         } else {
           return false;
         }
       case VK_RIGHT:
-        if (characterState.position.x < gridSize.getNumOfCols() - 1) {
+        handlePosture(characterState, Direction.EAST);
+        if (characterState.position.x < gridSize.getNumOfCols() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y, characterState.position.x+1)))) {
           characterState.position.x++;
-          if (characterState.direction == Direction.EAST) {
-            characterState.posture++;
-          } else {
-            characterState.direction = Direction.EAST;
-            characterState.posture = 0;
-          }
           return true;
         } else {
           return false;
@@ -89,6 +67,15 @@ public class MovementService {
       default:
         log.info("{} keycode was pressed", keyCode);
         return false;
+    }
+  }
+
+  private void handlePosture(CharacterState characterState, Direction direction) {
+    if (characterState.direction == direction) {
+      characterState.posture++;
+    } else {
+      characterState.direction = direction;
+      characterState.posture = 0;
     }
   }
 }
