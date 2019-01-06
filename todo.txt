@@ -1,2 +1,2 @@
 -Make readme
--Implement layers.
+-Replace Points with GridLocations.

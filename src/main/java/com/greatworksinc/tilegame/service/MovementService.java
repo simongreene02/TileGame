@@ -3,6 +3,7 @@ package com.greatworksinc.tilegame.service;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.greatworksinc.tilegame.annotations.Inaccessible;
 import com.greatworksinc.tilegame.annotations.MazeBackground;
 import com.greatworksinc.tilegame.model.CharacterState;
 import com.greatworksinc.tilegame.model.Direction;
@@ -25,7 +26,7 @@ public class MovementService {
   private final ImmutableMap<GridLocation, Integer> tileMap;
 
   @Inject
-  public MovementService(GridSize gridSize, ImmutableSet<Integer> inaccessibleSprites, @MazeBackground ImmutableMap<GridLocation, Integer> tileMap) {
+  public MovementService(GridSize gridSize, @Inaccessible ImmutableSet<Integer> inaccessibleSprites, @MazeBackground ImmutableMap<GridLocation, Integer> tileMap) {
     this.gridSize = gridSize;
     this.inaccessibleSprites = inaccessibleSprites;
     this.tileMap = tileMap;
@@ -35,32 +36,32 @@ public class MovementService {
     switch (keyCode) {
       case VK_UP:
         handlePosture(characterState, Direction.NORTH);
-        if (characterState.position.y > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y-1, characterState.position.x)))) {
-          characterState.position.y--;
+        if (characterState.getPosition().y > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y-1, characterState.getPosition().x)))) {
+          characterState.getPosition().y--;
           return true;
         } else {
           return false;
         }
       case VK_DOWN:
         handlePosture(characterState, Direction.SOUTH);
-        if (characterState.position.y < gridSize.getNumOfRows() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y+1, characterState.position.x)))) {
-          characterState.position.y++;
+        if (characterState.getPosition().y < gridSize.getNumOfRows() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y+1, characterState.getPosition().x)))) {
+          characterState.getPosition().y++;
           return true;
         } else {
           return false;
         }
       case VK_LEFT:
         handlePosture(characterState, Direction.WEST);
-        if (characterState.position.x > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y, characterState.position.x-1)))) {
-          characterState.position.x--;
+        if (characterState.getPosition().x > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y, characterState.getPosition().x-1)))) {
+          characterState.getPosition().x--;
           return true;
         } else {
           return false;
         }
       case VK_RIGHT:
         handlePosture(characterState, Direction.EAST);
-        if (characterState.position.x < gridSize.getNumOfCols() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.position.y, characterState.position.x+1)))) {
-          characterState.position.x++;
+        if (characterState.getPosition().x < gridSize.getNumOfCols() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y, characterState.getPosition().x+1)))) {
+          characterState.getPosition().x++;
           return true;
         } else {
           return false;
@@ -72,11 +73,11 @@ public class MovementService {
   }
 
   private void handlePosture(CharacterState characterState, Direction direction) {
-    if (characterState.direction == direction) {
-      characterState.posture++;
+    if (characterState.getDirection() == direction) {
+      characterState.incrementPosture();
     } else {
-      characterState.direction = direction;
-      characterState.posture = 0;
+      characterState.setDirection(direction);
+      characterState.resetPosture();
     }
   }
 }

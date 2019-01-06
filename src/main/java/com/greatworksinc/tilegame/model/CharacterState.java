@@ -6,9 +6,9 @@ import java.util.Map;
 
 public class CharacterState {
   private final Map<Direction, Integer[]> spriteList;
-  public Point position;
-  public Direction direction;
-  public int posture;
+  private Point position;
+  private Direction direction;
+  private int posture;
 
   public CharacterState() {
     position = new Point(0, 0);
@@ -28,5 +28,33 @@ public class CharacterState {
   public int getSpriteNumber() {
     Integer[] postureList = spriteList.get(direction);
     return postureList[posture%postureList.length];
+  }
+
+  public Point getPosition() {
+    return position;
+  }
+
+  public void setPosition(Point position) {
+    this.position = position;
+  }
+
+  public Direction getDirection() {
+    return direction;
+  }
+
+  public void setDirection(Direction direction) {
+    this.direction = direction;
+  }
+
+  public int getPosture() {
+    return posture;
+  }
+
+  public void resetPosture() {
+    this.posture = 0;
+  }
+
+  public void incrementPosture() {
+    this.posture++;
   }
 }

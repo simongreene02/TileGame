@@ -131,28 +131,52 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  private GridSize provideGridSize() {
-    return new GridLayer(MoreResources.getResource("Maze_Layer1.csv")).getGridSize();
-  }
-
-  @Provides
-  @Singleton
   @MazeBackground
-  private ImmutableMap<GridLocation, Integer> provideBackgroundTileMap() {
-    return new GridLayer(MoreResources.getResource("Maze_Layer1.csv")).getGidByLocation();
+  private GridLayer provideBackgroundLayer() {
+    log.info("provideBackgroundLayer");
+    return new GridLayer(MoreResources.getResource("Maze_Layer1.csv"));
   }
 
   @Provides
   @Singleton
   @MazeForeground
-  private ImmutableMap<GridLocation, Integer> provideForegroundTileMap() {
-    return new GridLayer(MoreResources.getResource("Maze_Layer2.csv")).getGidByLocation();
+  private GridLayer provideForegroundLayer() {
+    log.info("provideForegroundLayer");
+    return new GridLayer(MoreResources.getResource("Maze_Layer2.csv"));
   }
 
   @Provides
   @Singleton
+  private GridSize provideGridSize(@MazeBackground GridLayer gridLayer) {
+    return gridLayer.getGridSize();
+  }
+
+  @Provides
+  @Singleton
+  @MazeBackground
+  private ImmutableMap<GridLocation, Integer> provideBackgroundTileMap(@MazeBackground GridLayer gridLayer) {
+    return gridLayer.getGidByLocation();
+  }
+
+  @Provides
+  @Singleton
+  @MazeForeground
+  private ImmutableMap<GridLocation, Integer> provideForegroundTileMap(@MazeForeground GridLayer gridLayer) {
+    return gridLayer.getGidByLocation();
+  }
+
+  @Provides
+  @Singleton
+  @Inaccessible
   private ImmutableSet<Integer> provideInaccessibleSpriteIDs() {
     log.info("provideInaccessibleSpriteIDs");
     return ImmutableSet.of(75);
+  }
+
+  @Provides
+  @Singleton
+  private ImmutableSet<Integer> provideExitSpriteIDs() {
+    log.info("provideExitSpriteIDs");
+    return ImmutableSet.of(57);
   }
 }

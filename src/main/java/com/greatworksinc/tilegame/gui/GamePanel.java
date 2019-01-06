@@ -1,8 +1,10 @@
 package com.greatworksinc.tilegame.gui;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.model.CharacterState;
+import com.greatworksinc.tilegame.model.GridLayer;
 import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.service.MovementService;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -22,6 +25,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Scanner;
+
+import static javax.swing.JOptionPane.YES_OPTION;
 
 public class GamePanel extends Abstract2DPanel {
 
@@ -35,9 +40,17 @@ public class GamePanel extends Abstract2DPanel {
   private GridSize gridSize;
   private ImmutableMap<GridLocation, Integer> backgroundTiles;
   private ImmutableMap<GridLocation, Integer> foregroundTiles;
+  private ImmutableSet<Integer> exitTileIDs;
 
   @Inject
-  public GamePanel(@Maze TileLoader mazeTileLoader, @Castle TileLoader castleTileLoader, @CharacterSprite TileLoader characterTileLoader, MovementService movementService, GridSize gridSize, @MazeBackground ImmutableMap<GridLocation, Integer> backgroundTiles, @MazeForeground ImmutableMap<GridLocation, Integer> foregroundTiles) {
+  public GamePanel(@Maze TileLoader mazeTileLoader,
+                   @Castle TileLoader castleTileLoader,
+                   @CharacterSprite TileLoader characterTileLoader,
+                   MovementService movementService,
+                   GridSize gridSize,
+                   @MazeBackground ImmutableMap<GridLocation, Integer> backgroundTiles,
+                   @MazeForeground ImmutableMap<GridLocation, Integer> foregroundTiles,
+                   ImmutableSet<Integer> exitTileIDs) {
     this.mazeTileLoader = mazeTileLoader;
     this.castleTileLoader = castleTileLoader;
     this.characterTileLoader = characterTileLoader;
@@ -45,6 +58,7 @@ public class GamePanel extends Abstract2DPanel {
     this.gridSize = gridSize;
     this.backgroundTiles = backgroundTiles;
     this.foregroundTiles = foregroundTiles;
+    this.exitTileIDs = exitTileIDs;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
     player = new CharacterState();
@@ -57,7 +71,7 @@ public class GamePanel extends Abstract2DPanel {
   }
 
   private void paintPlayer(Graphics2D g) {
-    drawSprite(g, characterTileLoader.getTile(player.getSpriteNumber()), player.position.y, player.position.x);
+    drawSprite(g, characterTileLoader.getTile(player.getSpriteNumber()), player.getPosition().y, player.getPosition().x);
   }
 
   private void paintTerrain(Graphics2D g) {
@@ -87,6 +101,17 @@ public class GamePanel extends Abstract2DPanel {
     public void keyPressed(KeyEvent keyEvent) {
       movementService.move(player, keyEvent.getKeyCode());
       repaint();
+      checkExitCondition();
+    }
+  }
+
+  private void checkExitCondition() {
+    GridLocation gridLocation = new GridLocation(player.getPosition().y, player.getPosition().x);
+    log.info("{}", foregroundTiles.get(player.getPosition()));
+    if (exitTileIDs.contains(foregroundTiles.get(gridLocation))) {
+      if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {
+        System.exit(0);
+      }
     }
   }
 }
