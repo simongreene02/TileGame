@@ -12,7 +12,7 @@ public class GridLayer {
   private final GridSize gridSize;
   private final ImmutableMap<GridLocation, Integer> gidByLocation;
 
-  private GridLayer(URL url) {
+  public GridLayer(URL url) {
     ImmutableMap.Builder<GridLocation, Integer> output = ImmutableMap.builder();
     Scanner scanner = null;
     try {
@@ -33,7 +33,7 @@ public class GridLayer {
       output.put(new GridLocation(row, col), Integer.parseInt(next));
       col++;
     }
-    gridSize = new GridSize(row, col);
+    gridSize = new GridSize(row+1, col);
     gidByLocation = output.build();
   }
 

@@ -10,6 +10,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.gui.MainFrame;
 import com.greatworksinc.tilegame.gui.MainPanel;
+import com.greatworksinc.tilegame.model.GridLayer;
 import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.util.MoreResources;
@@ -131,19 +132,27 @@ public class TileGameModule extends PrivateModule {
   @Provides
   @Singleton
   private GridSize provideGridSize() {
-    throw new RuntimeException();
+    return new GridLayer(MoreResources.getResource("Maze_Layer1.csv")).getGridSize();
   }
 
   @Provides
   @Singleton
-  private ImmutableMap<GridLocation, Integer> provideTileMap() {
-    throw new RuntimeException();
+  @MazeBackground
+  private ImmutableMap<GridLocation, Integer> provideBackgroundTileMap() {
+    return new GridLayer(MoreResources.getResource("Maze_Layer1.csv")).getGidByLocation();
+  }
+
+  @Provides
+  @Singleton
+  @MazeForeground
+  private ImmutableMap<GridLocation, Integer> provideForegroundTileMap() {
+    return new GridLayer(MoreResources.getResource("Maze_Layer2.csv")).getGidByLocation();
   }
 
   @Provides
   @Singleton
   private ImmutableSet<Integer> provideInaccessibleSpriteIDs() {
     log.info("provideInaccessibleSpriteIDs");
-    return ImmutableSet.of(193);
+    return ImmutableSet.of(75);
   }
 }

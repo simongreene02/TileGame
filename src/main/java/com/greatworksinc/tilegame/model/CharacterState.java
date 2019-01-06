@@ -11,7 +11,7 @@ public class CharacterState {
   public int posture;
 
   public CharacterState() {
-    position = new Point(4, 4);
+    position = new Point(0, 0);
     Integer[] southSpriteList = {49, 50, 51};
     Integer[] westSpriteList = {61, 62, 63};
     Integer[] eastSpriteList = {73, 74, 75};
@@ -21,7 +21,7 @@ public class CharacterState {
     spriteList.put(Direction.SOUTH, southSpriteList);
     spriteList.put(Direction.EAST, eastSpriteList);
     spriteList.put(Direction.WEST, westSpriteList);
-    direction = Direction.NORTH;
+    direction = Direction.EAST;
     posture = 0;
   }
 

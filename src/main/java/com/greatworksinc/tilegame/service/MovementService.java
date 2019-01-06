@@ -3,6 +3,7 @@ package com.greatworksinc.tilegame.service;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.greatworksinc.tilegame.annotations.MazeBackground;
 import com.greatworksinc.tilegame.model.CharacterState;
 import com.greatworksinc.tilegame.model.Direction;
 import com.greatworksinc.tilegame.model.GridLocation;
@@ -24,7 +25,7 @@ public class MovementService {
   private final ImmutableMap<GridLocation, Integer> tileMap;
 
   @Inject
-  public MovementService(GridSize gridSize, ImmutableSet<Integer> inaccessibleSprites, ImmutableMap<GridLocation, Integer> tileMap) {
+  public MovementService(GridSize gridSize, ImmutableSet<Integer> inaccessibleSprites, @MazeBackground ImmutableMap<GridLocation, Integer> tileMap) {
     this.gridSize = gridSize;
     this.inaccessibleSprites = inaccessibleSprites;
     this.tileMap = tileMap;
