@@ -6,12 +6,12 @@ import java.util.Map;
 
 public class CharacterState {
   private final Map<Direction, Integer[]> spriteList;
-  private Point position;
+  private GridLocation position;
   private Direction direction;
   private int posture;
 
   public CharacterState() {
-    position = new Point(0, 0);
+    position = new GridLocation(0, 0);
     Integer[] southSpriteList = {49, 50, 51};
     Integer[] westSpriteList = {61, 62, 63};
     Integer[] eastSpriteList = {73, 74, 75};
@@ -30,11 +30,11 @@ public class CharacterState {
     return postureList[posture%postureList.length];
   }
 
-  public Point getPosition() {
+  public GridLocation getPosition() {
     return position;
   }
 
-  public void setPosition(Point position) {
+  public void setPosition(GridLocation position) {
     this.position = position;
   }
 

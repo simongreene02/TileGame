@@ -71,7 +71,7 @@ public class GamePanel extends Abstract2DPanel {
   }
 
   private void paintPlayer(Graphics2D g) {
-    drawSprite(g, characterTileLoader.getTile(player.getSpriteNumber()), player.getPosition().y, player.getPosition().x);
+    drawSprite(g, characterTileLoader.getTile(player.getSpriteNumber()), player.getPosition().getRow(), player.getPosition().getCol());
   }
 
   private void paintTerrain(Graphics2D g) {
@@ -106,7 +106,7 @@ public class GamePanel extends Abstract2DPanel {
   }
 
   private void checkExitCondition() {
-    GridLocation gridLocation = new GridLocation(player.getPosition().y, player.getPosition().x);
+    GridLocation gridLocation = new GridLocation(player.getPosition().getRow(), player.getPosition().getCol());
     log.info("{}", foregroundTiles.get(player.getPosition()));
     if (exitTileIDs.contains(foregroundTiles.get(gridLocation))) {
       if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {

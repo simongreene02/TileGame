@@ -36,32 +36,32 @@ public class MovementService {
     switch (keyCode) {
       case VK_UP:
         handlePosture(characterState, Direction.NORTH);
-        if (characterState.getPosition().y > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y-1, characterState.getPosition().x)))) {
-          characterState.getPosition().y--;
+        if (characterState.getPosition().getRow() > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().getRow()-1, characterState.getPosition().getCol())))) {
+          characterState.setPosition(new GridLocation(characterState.getPosition().getRow()-1, characterState.getPosition().getCol()));
           return true;
         } else {
           return false;
         }
       case VK_DOWN:
         handlePosture(characterState, Direction.SOUTH);
-        if (characterState.getPosition().y < gridSize.getNumOfRows() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y+1, characterState.getPosition().x)))) {
-          characterState.getPosition().y++;
+        if (characterState.getPosition().getRow() < gridSize.getNumOfRows() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().getRow()+1, characterState.getPosition().getCol())))) {
+          characterState.setPosition(new GridLocation(characterState.getPosition().getRow()+1, characterState.getPosition().getCol()));
           return true;
         } else {
           return false;
         }
       case VK_LEFT:
         handlePosture(characterState, Direction.WEST);
-        if (characterState.getPosition().x > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y, characterState.getPosition().x-1)))) {
-          characterState.getPosition().x--;
+        if (characterState.getPosition().getCol() > 0 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().getRow(), characterState.getPosition().getCol()-1)))) {
+          characterState.setPosition(new GridLocation(characterState.getPosition().getRow(), characterState.getPosition().getCol()-1));
           return true;
         } else {
           return false;
         }
       case VK_RIGHT:
         handlePosture(characterState, Direction.EAST);
-        if (characterState.getPosition().x < gridSize.getNumOfCols() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().y, characterState.getPosition().x+1)))) {
-          characterState.getPosition().x++;
+        if (characterState.getPosition().getCol() < gridSize.getNumOfCols() - 1 && !inaccessibleSprites.contains(tileMap.get(GridLocation.of(characterState.getPosition().getRow(), characterState.getPosition().getCol()+1)))) {
+          characterState.setPosition(new GridLocation(characterState.getPosition().getRow(), characterState.getPosition().getCol()+1));
           return true;
         } else {
           return false;
