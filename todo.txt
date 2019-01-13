@@ -1,2 +1,3 @@
 -Make readme
--Replace Points with GridLocations.
+-Get params working.
+-Finish CharacterState test.

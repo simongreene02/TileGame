@@ -47,6 +47,7 @@ dependencies {
 
     // junit jupiter
     testCompile "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+    testCompile "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
 
     // mockito
     testCompile "org.mockito:mockito-core:${mockitoVersion}"

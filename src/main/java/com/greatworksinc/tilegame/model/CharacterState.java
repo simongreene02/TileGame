@@ -1,33 +1,30 @@
 package com.greatworksinc.tilegame.model;
 
-import java.awt.*;
+import com.google.common.collect.ImmutableList;
+
 import java.util.EnumMap;
 import java.util.Map;
 
 public class CharacterState {
-  private final Map<Direction, Integer[]> spriteList;
+  private final Map<Direction, ImmutableList<Integer>> spriteList;
   private GridLocation position;
   private Direction direction;
   private int posture;
 
   public CharacterState() {
     position = new GridLocation(0, 0);
-    Integer[] southSpriteList = {49, 50, 51};
-    Integer[] westSpriteList = {61, 62, 63};
-    Integer[] eastSpriteList = {73, 74, 75};
-    Integer[] northSpriteList = {85, 86, 87};
     spriteList = new EnumMap<>(Direction.class);
-    spriteList.put(Direction.NORTH, northSpriteList);
-    spriteList.put(Direction.SOUTH, southSpriteList);
-    spriteList.put(Direction.EAST, eastSpriteList);
-    spriteList.put(Direction.WEST, westSpriteList);
+    spriteList.put(Direction.NORTH, ImmutableList.of(85, 86, 87));
+    spriteList.put(Direction.SOUTH, ImmutableList.of(49, 50, 51));
+    spriteList.put(Direction.EAST, ImmutableList.of(73, 74, 75));
+    spriteList.put(Direction.WEST, ImmutableList.of(61, 62, 63));
     direction = Direction.EAST;
     posture = 0;
   }
 
   public int getSpriteNumber() {
-    Integer[] postureList = spriteList.get(direction);
-    return postureList[posture%postureList.length];
+    ImmutableList<Integer> postureList = spriteList.get(direction);
+    return postureList.get(posture % postureList.size());
   }
 
   public GridLocation getPosition() {
