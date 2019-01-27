@@ -41,7 +41,11 @@ public class GridLayer {
     return gridSize;
   }
 
-  public ImmutableMap<GridLocation, Integer> getGidByLocation() {
-    return gidByLocation;
+  public int getGidByLocation(GridLocation location) {
+    Integer output = gidByLocation.get(location);
+    if (output == null) {
+      throw new IllegalArgumentException("Location must exist within grid.");
+    }
+    return output;
   }
 }

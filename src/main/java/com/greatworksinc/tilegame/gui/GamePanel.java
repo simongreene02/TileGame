@@ -38,8 +38,8 @@ public class GamePanel extends Abstract2DPanel {
   private CharacterState player;
   private KeyListener keyListener;
   private GridSize gridSize;
-  private ImmutableMap<GridLocation, Integer> backgroundTiles;
-  private ImmutableMap<GridLocation, Integer> foregroundTiles;
+  private GridLayer backgroundLayer;
+  private GridLayer foregroundLayer;
   private ImmutableSet<Integer> exitTileIDs;
 
   @Inject
@@ -48,16 +48,16 @@ public class GamePanel extends Abstract2DPanel {
                    @CharacterSprite TileLoader characterTileLoader,
                    MovementService movementService,
                    GridSize gridSize,
-                   @MazeBackground ImmutableMap<GridLocation, Integer> backgroundTiles,
-                   @MazeForeground ImmutableMap<GridLocation, Integer> foregroundTiles,
+                   @MazeBackground GridLayer backgroundLayer,
+                   @MazeForeground GridLayer foregroundLayer,
                    ImmutableSet<Integer> exitTileIDs) {
     this.mazeTileLoader = mazeTileLoader;
     this.castleTileLoader = castleTileLoader;
     this.characterTileLoader = characterTileLoader;
     this.movementService = movementService;
-    this.gridSize = gridSize;
-    this.backgroundTiles = backgroundTiles;
-    this.foregroundTiles = foregroundTiles;
+    this.backgroundLayer = backgroundLayer;
+    this.foregroundLayer = foregroundLayer;
+    this.gridSize = backgroundLayer.getGridSize();
     this.exitTileIDs = exitTileIDs;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
@@ -77,8 +77,8 @@ public class GamePanel extends Abstract2DPanel {
   private void paintTerrain(Graphics2D g) {
     for (int row = 0; row < gridSize.getNumOfRows(); row++) {
       for (int col = 0; col < gridSize.getNumOfCols(); col++) {
-        int backgroundTile = backgroundTiles.get(new GridLocation(row, col));
-        int foregroundTile = foregroundTiles.get(new GridLocation(row, col));
+        int backgroundTile = backgroundLayer.getGidByLocation(GridLocation.of(row, col));
+        int foregroundTile = foregroundLayer.getGidByLocation(GridLocation.of(row, col));
         drawSprite(g, mazeTileLoader.getTile(backgroundTile), row, col);
         if (foregroundTile != 0) {
           drawSprite(g, mazeTileLoader.getTile(foregroundTile), row, col);
@@ -107,8 +107,8 @@ public class GamePanel extends Abstract2DPanel {
 
   private void checkExitCondition() {
     GridLocation gridLocation = new GridLocation(player.getPosition().getRow(), player.getPosition().getCol());
-    log.info("{}", foregroundTiles.get(player.getPosition()));
-    if (exitTileIDs.contains(foregroundTiles.get(gridLocation))) {
+    log.info("PlayerForegroundTile: {}", foregroundLayer.getGidByLocation(player.getPosition()));
+    if (exitTileIDs.contains(foregroundLayer.getGidByLocation(gridLocation))) {
       if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {
         System.exit(0);
       }

@@ -151,19 +151,19 @@ public class TileGameModule extends PrivateModule {
     return gridLayer.getGridSize();
   }
 
-  @Provides
-  @Singleton
-  @MazeBackground
-  private ImmutableMap<GridLocation, Integer> provideBackgroundTileMap(@MazeBackground GridLayer gridLayer) {
-    return gridLayer.getGidByLocation();
-  }
+//  @Provides
+//  @Singleton
+//  @MazeBackground
+//  private ImmutableMap<GridLocation, Integer> provideBackgroundTileMap(@MazeBackground GridLayer gridLayer) {
+//    return gridLayer.getGidByLocation();
+//  }
 
-  @Provides
-  @Singleton
-  @MazeForeground
-  private ImmutableMap<GridLocation, Integer> provideForegroundTileMap(@MazeForeground GridLayer gridLayer) {
-    return gridLayer.getGidByLocation();
-  }
+//  @Provides
+//  @Singleton
+//  @MazeForeground
+//  private ImmutableMap<GridLocation, Integer> provideForegroundTileMap(@MazeForeground GridLayer gridLayer) {
+//    return gridLayer.getGidByLocation();
+//  }
 
   @Provides
   @Singleton
