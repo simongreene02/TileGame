@@ -18,10 +18,12 @@ class CharacterStateTest {
 
   @Test
   void getSpriteNumber() {
+    assertThat(player.getSpriteNumber()).isEqualTo(73);
   }
 
   @Test
   void getPosition() {
+    assertThat(player.getPosition()).isEqualTo(GridLocation.of(0, 0));
   }
 
   @Test
@@ -31,13 +33,15 @@ class CharacterStateTest {
   }
 
   @Test
-  void getDirection() {
+  void getDirectionDefault() {
+    assertThat(player.getDirection()).isSameAs(Direction.EAST);
   }
 
   @ParameterizedTest
   @EnumSource(Direction.class)
   void setDirecton(Direction direction) {
-    assertThat(true);
+    player.setDirection(direction);
+    assertThat(player.getDirection()).isSameAs(direction);
   }
 
   @Test
