@@ -3,6 +3,8 @@ package com.greatworksinc.tilegame.model;
 import com.greatworksinc.tilegame.util.MoreResources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -20,8 +22,9 @@ class GridLayerTest {
     assertThat(layer2x3.getGridSize()).isEqualTo(GridSize.of(2, 3));
   }
 
-  @Test
-  void getGidByLocation() {
-    //assertThat(layer2x3.getGidByLocation());
+  @ParameterizedTest
+  @CsvFileSource(resources = "/testLevel2x3Params.csv")
+  void getGidByLocation(String row, String col, String gid) {
+    assertThat(layer2x3.getGidByLocation(GridLocation.of(Integer.parseInt(row), Integer.parseInt(col)))).isEqualTo(Integer.parseInt(gid));
   }
 }
