@@ -1,6 +1,5 @@
 -Make readme.
--Make tests for MovementService.
-    -Use parameterized types when possible.
+-Finish getTile test using Mockito.
 
 
 

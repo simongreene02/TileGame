@@ -1,5 +1,6 @@
 package com.greatworksinc.tilegame.util;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.assistedinject.Assisted;
 import com.greatworksinc.tilegame.annotations.Height;
@@ -27,10 +28,6 @@ public class TileLoader {
     }
   }
 
-  public ImmutableList<BufferedImage> getTiles() {
-    return tiles;
-  }
-
   public BufferedImage getTile(int tileID) {
     if (tileID < 1 || tileID > tiles.size()) {
       throw new IllegalArgumentException("TileID must be between 1 and " + tiles.size() + ".");
@@ -38,7 +35,7 @@ public class TileLoader {
     return tiles.get(tileID-1);
   }
 
-  private static ImmutableList<BufferedImage> createTiles(BufferedImage bigImg, int width, int height) {
+  @VisibleForTesting static ImmutableList<BufferedImage> createTiles(BufferedImage bigImg, int width, int height) {
     ImmutableList.Builder<BufferedImage> tiles = ImmutableList.builder();
     for (int y = 0; y < bigImg.getHeight(); y += height) {
       for (int x = 0; x < bigImg.getWidth(); x += width) {
