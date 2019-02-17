@@ -2,6 +2,7 @@ package com.greatworksinc.tilegame.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +29,7 @@ class TileLoaderTest extends Mockito {
 
   @Test
   void getTile() {
-    ImmutableMap.Builder<Integer, BufferedImage> smallImageByName = ImmutableMap.builder();
+    ImmutableMap.Builder<Integer, BufferedImage> smallImageByNameBuilder = ImmutableSortedMap.naturalOrder();
     int maxRows = 5;
     int maxCols = 10;
     int width = 2;
@@ -37,13 +38,15 @@ class TileLoaderTest extends Mockito {
       for (int col = 0; col < maxCols; col++) {
         int key = maxCols*row+col+1;
         BufferedImage smallImg = mock(BufferedImage.class);
-        smallImageByName.put(key, smallImg);
+        smallImageByNameBuilder.put(key, smallImg);
         doReturn(smallImg).when(tileSource).getSubimage(col*width, row*height, width, height);
       }
     }
     doReturn(maxCols*width).when(tileSource).getWidth();
     doReturn(maxRows*height).when(tileSource).getHeight();
+    Iterable<BufferedImage> smallImageByName = smallImageByNameBuilder.build().values();
     ImmutableList<BufferedImage> createdTiles = TileLoader.createTiles(tileSource, width, height);
+    assertThat(createdTiles).containsExactlyElementsIn(smallImageByName).inOrder();
   }
 
   @Test
