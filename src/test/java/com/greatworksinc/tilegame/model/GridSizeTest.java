@@ -14,13 +14,13 @@ class GridSizeTest {
   }
 
   @Test
-  void init_zero_success() {
+  void init_zero_error() {
     assertThrows(IllegalArgumentException.class,
         () -> new GridSize(0, 0));
   }
 
   @Test
-  void init_negative_success() {
+  void init_negative_error() {
     assertThrows(IllegalArgumentException.class,
         () -> new GridSize(-1, -1));
   }
