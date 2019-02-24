@@ -5,8 +5,10 @@ plugins {
 
 sourceSets {
     test {
-        // Compiled Java classes should use this directory
-        java.outputDir = file('out/test/classes')
+        java {
+            // Compiled Java classes should use this directory
+            outputDir =  file('out/test/classes')
+        }
     }
 }
 
@@ -60,10 +62,10 @@ dependencies {
     testCompile "com.google.guava:guava-testlib:${guavaVersion}"
 }
 
+test {
+    useJUnitPlatform()
+}
 jar {
     baseName = 'game-tile'
     version = '1.0.0'
-}
-test {
-    useJUnitPlatform()
 }

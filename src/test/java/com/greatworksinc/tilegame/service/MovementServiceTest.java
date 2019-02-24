@@ -1,5 +1,6 @@
 package com.greatworksinc.tilegame.service;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import com.greatworksinc.tilegame.model.CharacterState;
 import com.greatworksinc.tilegame.model.GridLayer;
