@@ -1,7 +1,3 @@
 -Make readme.
--Finish getTile test using Mockito.
-
-
-
-https://blog.codefx.org/libraries/junit-5-parameterized-tests/
-https://junit.org/junit5/docs/current/user-guide/
+-Optimize MazeGenerator.
+-Create MazeGenerator test.
