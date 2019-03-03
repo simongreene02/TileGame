@@ -10,9 +10,12 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.gui.MainFrame;
 import com.greatworksinc.tilegame.gui.MainPanel;
+import com.greatworksinc.tilegame.model.GridDataSource;
 import com.greatworksinc.tilegame.model.GridLayer;
 import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
+import com.greatworksinc.tilegame.tools.ForegroundGenerator;
+import com.greatworksinc.tilegame.tools.MazeGenerator;
 import com.greatworksinc.tilegame.util.MoreResources;
 import com.greatworksinc.tilegame.util.TileLoader;
 import com.greatworksinc.tilegame.util.TileLoaderFactory;
@@ -34,6 +37,7 @@ public class TileGameModule extends PrivateModule {
     install(new FactoryModuleBuilder().build(TileLoaderFactory.class));
     bind(JPanel.class).to(MainPanel.class).in(Singleton.class);
     bind(JFrame.class).to(MainFrame.class);
+    bind(GridDataSource.class).to(MazeGenerator.class);
     expose(JFrame.class);
   }
 
@@ -132,23 +136,25 @@ public class TileGameModule extends PrivateModule {
   @Provides
   @Singleton
   @MazeBackground
-  private GridLayer provideBackgroundLayer() {
+  private GridLayer provideBackgroundLayer(GridDataSource gridDataSource) {
     log.info("provideBackgroundLayer");
-    return new GridLayer(MoreResources.getResource("Maze_Layer1.csv"));
+    //return new GridLayer(MoreResources.getResource("Maze_Layer1.csv"));
+    return new GridLayer(gridDataSource);
   }
 
   @Provides
   @Singleton
   @MazeForeground
-  private GridLayer provideForegroundLayer() {
+  private GridLayer provideForegroundLayer(ForegroundGenerator foregroundGenerator) {
     log.info("provideForegroundLayer");
-    return new GridLayer(MoreResources.getResource("Maze_Layer2.csv"));
+    return new GridLayer(foregroundGenerator);
+    //return generateForeground(background.gridSize)
   }
 
   @Provides
   @Singleton
-  private GridSize provideGridSize(@MazeBackground GridLayer gridLayer) {
-    return gridLayer.getGridSize();
+  private GridSize provideGridSize() {
+    return GridSize.of(11, 11);
   }
 
 //  @Provides
@@ -179,4 +185,6 @@ public class TileGameModule extends PrivateModule {
     log.info("provideExitSpriteIDs");
     return ImmutableSet.of(57);
   }
+
+
 }

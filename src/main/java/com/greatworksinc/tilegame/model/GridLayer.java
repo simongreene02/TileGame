@@ -1,7 +1,9 @@
 package com.greatworksinc.tilegame.model;
 
 import com.google.common.collect.ImmutableMap;
+import com.greatworksinc.tilegame.tools.MazeGenerator;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -12,15 +14,10 @@ public class GridLayer {
   private final GridSize gridSize;
   private final ImmutableMap<GridLocation, Integer> gidByLocation;
 
-  public GridLayer(URL url) {
+  public GridLayer(GridDataSource source) {
     ImmutableMap.Builder<GridLocation, Integer> output = ImmutableMap.builder();
-    Scanner scanner = null;
-    try {
-      scanner = new Scanner(Paths.get(url.toURI()));
-      scanner.useDelimiter(",");
-    } catch (URISyntaxException | IOException e) {
-      throw new RuntimeException(e);
-    }
+    Scanner scanner = new Scanner(source.getDataAsString());
+    scanner.useDelimiter(",");
     int row = 0;
     int col = 0;
     while (scanner.hasNext()) {
