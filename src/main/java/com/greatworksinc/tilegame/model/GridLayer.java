@@ -1,20 +1,18 @@
 package com.greatworksinc.tilegame.model;
 
 import com.google.common.collect.ImmutableMap;
-import com.greatworksinc.tilegame.tools.MazeGenerator;
+import com.google.inject.assistedinject.Assisted;
+import com.greatworksinc.tilegame.annotations.MazeBackground;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class GridLayer {
   private final GridSize gridSize;
   private final ImmutableMap<GridLocation, Integer> gidByLocation;
 
-  public GridLayer(GridDataSource source) {
+  @Inject
+  public GridLayer(@Assisted GridDataSource source) {
     ImmutableMap.Builder<GridLocation, Integer> output = ImmutableMap.builder();
     Scanner scanner = new Scanner(source.getDataAsString());
     scanner.useDelimiter(",");

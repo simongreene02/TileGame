@@ -1,6 +1,4 @@
 -Make readme.
 -Optimize MazeGenerator.
 -Create MazeGenerator test.
--Fix comma issue (hopefully not with substring method).
--Get everything working.
--Implement foregroundGenerator.
+-Modify GridDataSource and GridLayer to use ImmutableMap<GridLocation, Integer>.

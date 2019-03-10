@@ -1,14 +1,10 @@
 package com.greatworksinc.tilegame.gui;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.greatworksinc.tilegame.annotations.*;
-import com.greatworksinc.tilegame.model.CharacterState;
-import com.greatworksinc.tilegame.model.GridLayer;
-import com.greatworksinc.tilegame.model.GridLocation;
-import com.greatworksinc.tilegame.model.GridSize;
+import com.greatworksinc.tilegame.model.*;
 import com.greatworksinc.tilegame.service.MovementService;
-import com.greatworksinc.tilegame.util.MoreResources;
+import com.greatworksinc.tilegame.tools.RandomBackgroundGenerator;
 import com.greatworksinc.tilegame.util.TileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +16,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Scanner;
 
 import static javax.swing.JOptionPane.YES_OPTION;
 
@@ -35,12 +26,17 @@ public class GamePanel extends Abstract2DPanel {
   private final TileLoader castleTileLoader;
   private final TileLoader characterTileLoader;
   private final MovementService movementService;
-  private CharacterState player;
-  private KeyListener keyListener;
-  private GridSize gridSize;
+  private final CharacterState player;
+  private final KeyListener keyListener;
+  private final GridSize gridSize;
+  private GridLayerFactory backgroundLayerFactory;
   private GridLayer backgroundLayer;
-  private GridLayer foregroundLayer;
-  private ImmutableSet<Integer> exitTileIDs;
+  private final GridLayer foregroundLayer;
+  private final ImmutableSet<Integer> exitTileIDs;
+  private final int maxLevel;
+  private int level;
+  private GridDataSource backgroundGenerator;
+
 
   @Inject
   public GamePanel(@Maze TileLoader mazeTileLoader,
@@ -48,20 +44,26 @@ public class GamePanel extends Abstract2DPanel {
                    @CharacterSprite TileLoader characterTileLoader,
                    MovementService movementService,
                    GridSize gridSize,
-                   @MazeBackground GridLayer backgroundLayer,
-                   @MazeForeground GridLayer foregroundLayer,
-                   ImmutableSet<Integer> exitTileIDs) {
+                   GridLayerFactory backgroundLayerFactory,
+                   @MazeBackground GridDataSource backgroundGenerator,
+                   @MazeForeground GridDataSource foregroundGenerator,
+                   ImmutableSet<Integer> exitTileIDs,
+                   int maxLevel) {
     this.mazeTileLoader = mazeTileLoader;
     this.castleTileLoader = castleTileLoader;
     this.characterTileLoader = characterTileLoader;
     this.movementService = movementService;
-    this.backgroundLayer = backgroundLayer;
-    this.foregroundLayer = foregroundLayer;
-    this.gridSize = backgroundLayer.getGridSize();
+    this.backgroundLayerFactory = backgroundLayerFactory;
+    this.foregroundLayer = backgroundLayerFactory.createForegroundGridLayer(foregroundGenerator);
+    this.gridSize = gridSize;
     this.exitTileIDs = exitTileIDs;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
     player = new CharacterState();
+    this.maxLevel = maxLevel;
+    this.backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
+    this.backgroundGenerator = backgroundGenerator;
+    level = 1;
   }
 
   @Override
@@ -109,8 +111,14 @@ public class GamePanel extends Abstract2DPanel {
     GridLocation gridLocation = new GridLocation(player.getPosition().getRow(), player.getPosition().getCol());
     log.info("PlayerForegroundTile: {}", foregroundLayer.getGidByLocation(player.getPosition()));
     if (exitTileIDs.contains(foregroundLayer.getGidByLocation(gridLocation))) {
-      if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {
-        System.exit(0);
+      if (level >= maxLevel) {
+        if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {
+          System.exit(0);
+        }
+      } else {
+        level++;
+        backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
+        player.setPosition(GridLocation.of(0, 0));
       }
     }
   }

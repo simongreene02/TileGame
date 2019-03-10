@@ -1,7 +1,5 @@
 package com.greatworksinc.tilegame;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.PrivateModule;
 import com.google.inject.Provides;
@@ -12,10 +10,10 @@ import com.greatworksinc.tilegame.gui.MainFrame;
 import com.greatworksinc.tilegame.gui.MainPanel;
 import com.greatworksinc.tilegame.model.GridDataSource;
 import com.greatworksinc.tilegame.model.GridLayer;
-import com.greatworksinc.tilegame.model.GridLocation;
+import com.greatworksinc.tilegame.model.GridLayerFactory;
 import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.tools.ForegroundGenerator;
-import com.greatworksinc.tilegame.tools.MazeGenerator;
+import com.greatworksinc.tilegame.tools.RandomBackgroundGenerator;
 import com.greatworksinc.tilegame.util.MoreResources;
 import com.greatworksinc.tilegame.util.TileLoader;
 import com.greatworksinc.tilegame.util.TileLoaderFactory;
@@ -24,20 +22,17 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Scanner;
+import java.util.Random;
 
 public class TileGameModule extends PrivateModule {
   private static final Logger log = LoggerFactory.getLogger(TileGameModule.class);
   @Override
   protected void configure() {
     install(new FactoryModuleBuilder().build(TileLoaderFactory.class));
+    install(new FactoryModuleBuilder().build(GridLayerFactory.class));
     bind(JPanel.class).to(MainPanel.class).in(Singleton.class);
     bind(JFrame.class).to(MainFrame.class);
-    bind(GridDataSource.class).to(MazeGenerator.class);
     expose(JFrame.class);
   }
 
@@ -136,19 +131,17 @@ public class TileGameModule extends PrivateModule {
   @Provides
   @Singleton
   @MazeBackground
-  private GridLayer provideBackgroundLayer(GridDataSource gridDataSource) {
+  private GridDataSource provideBackgroundLayer(RandomBackgroundGenerator impl) {
     log.info("provideBackgroundLayer");
-    //return new GridLayer(MoreResources.getResource("Maze_Layer1.csv"));
-    return new GridLayer(gridDataSource);
+    return impl;
   }
 
   @Provides
   @Singleton
   @MazeForeground
-  private GridLayer provideForegroundLayer(ForegroundGenerator foregroundGenerator) {
+  private GridDataSource provideForegroundLayer(ForegroundGenerator impl) {
     log.info("provideForegroundLayer");
-    return new GridLayer(foregroundGenerator);
-    //return generateForeground(background.gridSize)
+    return impl;
   }
 
   @Provides
@@ -156,20 +149,6 @@ public class TileGameModule extends PrivateModule {
   private GridSize provideGridSize() {
     return GridSize.of(11, 11);
   }
-
-//  @Provides
-//  @Singleton
-//  @MazeBackground
-//  private ImmutableMap<GridLocation, Integer> provideBackgroundTileMap(@MazeBackground GridLayer gridLayer) {
-//    return gridLayer.getGidByLocation();
-//  }
-
-//  @Provides
-//  @Singleton
-//  @MazeForeground
-//  private ImmutableMap<GridLocation, Integer> provideForegroundTileMap(@MazeForeground GridLayer gridLayer) {
-//    return gridLayer.getGidByLocation();
-//  }
 
   @Provides
   @Singleton
@@ -186,5 +165,15 @@ public class TileGameModule extends PrivateModule {
     return ImmutableSet.of(57);
   }
 
+  @Provides
+  @Singleton
+  private Random provideRandom() {
+    return new Random(0);
+  }
 
+  @Provides
+  @Singleton
+  private int provideMaxLevel() {
+    return 3;
+  }
 }

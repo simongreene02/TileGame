@@ -7,13 +7,13 @@ import javax.inject.Inject;
 import java.awt.*;
 import java.util.Random;
 
-public class MazeGenerator implements GridDataSource {
+public class RandomBackgroundGenerator implements GridDataSource {
 
   private final GridSize gridSize;
   private final Random random;
 
   @Inject
-  public MazeGenerator(GridSize gridSize, Random random) {
+  public RandomBackgroundGenerator(GridSize gridSize, Random random) {
     this.gridSize = gridSize;
     this.random = random;
   }
@@ -67,16 +67,26 @@ public class MazeGenerator implements GridDataSource {
     } while (!isMazeFinished(maze));
 
     StringBuilder outputString = new StringBuilder();
-    outputString.append("15");
-    for (boolean[] row : maze) {
-      for (boolean tile : row) {
-        outputString.append(tile ? ",15" : ",75");
+//    for (boolean[] row : maze) {
+//      for (boolean tile : row) {
+//        outputString.append(tile ? "15," : "75,");
+//      }
+//      outputString.append("\n");
+//    }
 
+    for (int i = 0; i < maze.length; i++) {
+      for (int j = 0; j < maze[i].length; j++) {
+        outputString.append(maze[i][j] ? "15" : "75");
+        if (i != maze.length-1 || j != maze[i].length-1) {
+          outputString.append(",");
+        }
       }
-      outputString.append("\n");
+      if (i != maze.length-1) {
+        outputString.append("\n");
+      }
     }
 
-    //System.out.println(outputString.toString());
+    System.out.println(outputString.toString());
     return outputString.toString();
   }
 
