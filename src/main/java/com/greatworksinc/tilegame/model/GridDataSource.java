@@ -1,5 +1,7 @@
 package com.greatworksinc.tilegame.model;
 
+import com.google.common.collect.ImmutableMap;
+
 public interface GridDataSource {
-  String getDataAsString();
+  ImmutableMap<GridLocation, Integer> getDataAsMap();
 }

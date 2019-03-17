@@ -1,6 +1,8 @@
 package com.greatworksinc.tilegame.tools;
 
+import com.google.common.collect.ImmutableMap;
 import com.greatworksinc.tilegame.model.GridDataSource;
+import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 
 import javax.inject.Inject;
@@ -15,24 +17,22 @@ public class ForegroundGenerator implements GridDataSource {
   }
 
   @Override
-  public String getDataAsString() {
-    StringBuilder outString = new StringBuilder();
-    outString.append("58,");
-    for (int i = 0; i < gridSize.getNumOfRows() - 1; i++) {
-      outString.append("0,");
+  public ImmutableMap<GridLocation, Integer> getDataAsMap() {
+    ImmutableMap.Builder<GridLocation, Integer> outList = ImmutableMap.builder();
+    outList.put(GridLocation.of(0, 0), 58);
+    for (int j = 1; j < gridSize.getNumOfRows(); j++) {
+      outList.put(GridLocation.of(j, 0), 0);
     }
-    for (int i = 0; i < gridSize.getNumOfCols() - 2; i++) {
-      outString.append('\n');
+    for (int i = 1; i < gridSize.getNumOfCols() - 1; i++) {
       for (int j = 0; j < gridSize.getNumOfRows(); j++) {
-        outString.append("0,");
+        outList.put(GridLocation.of(j, i), 0);
       }
     }
-    outString.append('\n');
-    for (int i = 0; i < gridSize.getNumOfRows() - 1; i++) {
-      outString.append("0,");
+    for (int j = 0; j < gridSize.getNumOfRows() - 1; j++) {
+      outList.put(GridLocation.of(j, gridSize.getNumOfCols() - 1), 0);
     }
-    outString.append("57");
+    outList.put(GridLocation.of(gridSize.getNumOfRows()-1, gridSize.getNumOfCols()-1), 57);
 
-    return outString.toString();
+    return outList.build();
   }
 }

@@ -1,6 +1,8 @@
 package com.greatworksinc.tilegame.tools;
 
+import com.google.common.collect.ImmutableMap;
 import com.greatworksinc.tilegame.model.GridDataSource;
+import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 
 import javax.inject.Inject;
@@ -19,11 +21,11 @@ public class RandomBackgroundGenerator implements GridDataSource {
   }
 
   @Override
-  public String getDataAsString() {
+  public ImmutableMap<GridLocation, Integer> getDataAsMap() {
     return generateMaze(gridSize.getNumOfCols(), gridSize.getNumOfRows());
   }
 
-  private String generateMaze(int width, int height) {
+  private ImmutableMap<GridLocation, Integer> generateMaze(int width, int height) {
     boolean[][] maze = new boolean[height][width];
     Point cursor = new Point();
     int direction;
@@ -66,28 +68,19 @@ public class RandomBackgroundGenerator implements GridDataSource {
       }
     } while (!isMazeFinished(maze));
 
-    StringBuilder outputString = new StringBuilder();
-//    for (boolean[] row : maze) {
-//      for (boolean tile : row) {
-//        outputString.append(tile ? "15," : "75,");
-//      }
-//      outputString.append("\n");
-//    }
+    ImmutableMap.Builder<GridLocation, Integer> outList = ImmutableMap.builder();
 
-    for (int i = 0; i < maze.length; i++) {
-      for (int j = 0; j < maze[i].length; j++) {
-        outputString.append(maze[i][j] ? "15" : "75");
-        if (i != maze.length-1 || j != maze[i].length-1) {
-          outputString.append(",");
+    for (int i = 0; i < gridSize.getNumOfCols(); i++) {
+      for (int j = 0; j < gridSize.getNumOfRows(); j++) {
+        if (maze[j][i]) {
+          outList.put(GridLocation.of(i, j), 15);
+        } else {
+          outList.put(GridLocation.of(i, j), 75);
         }
-      }
-      if (i != maze.length-1) {
-        outputString.append("\n");
       }
     }
 
-    System.out.println(outputString.toString());
-    return outputString.toString();
+    return outList.build();
   }
 
   private static boolean isTileInDirection(Point cursor, int direction, boolean[][] maze) {

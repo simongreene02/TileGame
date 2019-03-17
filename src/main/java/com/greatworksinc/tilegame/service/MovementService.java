@@ -17,13 +17,13 @@ public class MovementService {
   private static final Logger log = LoggerFactory.getLogger(MovementService.class);
   private final GridSize gridSize;
   private final ImmutableSet<Integer> inaccessibleSprites;
-  private final GridLayer tileLayer;
+  private final ImmutableMap<GridLocation, Integer> tileLayer;
 
   @Inject
-  public MovementService(@Inaccessible ImmutableSet<Integer> inaccessibleSprites, @MazeBackground GridLayer tileLayer) {
+  public MovementService(@Inaccessible ImmutableSet<Integer> inaccessibleSprites, @MazeBackground GridDataSource tileLayerSource, GridSize gridSize) {
     this.inaccessibleSprites = inaccessibleSprites;
-    this.tileLayer = tileLayer;
-    this.gridSize = tileLayer.getGridSize();
+    this.tileLayer = tileLayerSource.getDataAsMap();
+    this.gridSize = gridSize;
   }
 
   public boolean move(CharacterState characterState, int keyCode) {
@@ -52,7 +52,7 @@ public class MovementService {
 
     if (finalLocation.getRow() >= 0 && finalLocation.getRow() < gridSize.getNumOfRows()
         && finalLocation.getCol() >= 0 && finalLocation.getCol() < gridSize.getNumOfCols()
-        && !inaccessibleSprites.contains(tileLayer.getGidByLocation(finalLocation))) {
+        && !inaccessibleSprites.contains(tileLayer.get(finalLocation))) {
       characterState.setPosition(finalLocation);
       return true;
     } else {

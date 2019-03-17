@@ -1,20 +1,38 @@
 package com.greatworksinc.tilegame.model;
 
+import com.google.common.collect.ImmutableMap;
 import com.greatworksinc.tilegame.util.MoreResources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.google.common.truth.Truth.assertThat;
 
-class GridLayerTest {
+@ExtendWith(MockitoExtension.class)
+@RunWith(JUnitPlatform.class)
+class GridLayerTest extends Mockito {
 
+  private @Mock GridDataSource gridDataSource;
   private GridLayer layer2x3;
 
   @BeforeEach
   void setUp() {
-    layer2x3 = new GridLayer(MoreResources.getResource("testLevel2x3.csv"));
+    doReturn(ImmutableMap.builder()
+        .put(GridLocation.of(0, 0), 1)
+        .put(GridLocation.of(0, 1), 2)
+        .put(GridLocation.of(0, 2), 3)
+        .put(GridLocation.of(1, 0), 4)
+        .put(GridLocation.of(1, 1), 5)
+        .put(GridLocation.of(1, 2), 6)
+        .build()).when(gridDataSource).getDataAsMap();
+    layer2x3 = new GridLayer(gridDataSource, GridSize.of(2, 3));
   }
 
   @Test

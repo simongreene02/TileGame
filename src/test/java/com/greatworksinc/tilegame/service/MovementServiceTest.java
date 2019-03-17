@@ -1,25 +1,37 @@
 package com.greatworksinc.tilegame.service;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.greatworksinc.tilegame.model.CharacterState;
-import com.greatworksinc.tilegame.model.GridLayer;
-import com.greatworksinc.tilegame.model.GridLocation;
+import com.greatworksinc.tilegame.model.*;
 import com.greatworksinc.tilegame.util.MoreResources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class MovementServiceTest {
+@ExtendWith(MockitoExtension.class)
+@RunWith(JUnitPlatform.class)
+class MovementServiceTest extends Mockito {
 
   private static final ImmutableSet<Integer> INACCESSIBLE_SPRITES = ImmutableSet.of(75);
+  private static final GridSize GRID_SIZE = GridSize.of(10, 10);
+
+  private @Mock GridDataSource gridDataSource;
 
   private CharacterState player;
   private MovementService movementService;
@@ -27,8 +39,8 @@ class MovementServiceTest {
   @BeforeEach
   void setUp() {
     player = new CharacterState();
-    movementService = new MovementService(INACCESSIBLE_SPRITES,
-        new GridLayer(MoreResources.getResource("Maze_Layer_test.csv")));
+    doReturn(createGridData(GRID_SIZE, 15, GridLocation.of(2, 2), 75)).when(gridDataSource).getDataAsMap();
+    movementService = new MovementService(INACCESSIBLE_SPRITES, gridDataSource, GRID_SIZE);
   }
 
   @ParameterizedTest
@@ -89,5 +101,16 @@ class MovementServiceTest {
         //Invalid key command.
         Arguments.of(GridLocation.of(5, 5), 36, GridLocation.of(5, 5), false)
     );
+  }
+
+  private static ImmutableMap<GridLocation, Integer> createGridData(GridSize gridSize, Integer value, GridLocation impassableSquare, Integer impassableValue) {
+    Map<GridLocation, Integer> gridData = new HashMap<>();
+    for (int row = 0; row < gridSize.getNumOfRows(); row++) {
+      for (int col = 0; col < gridSize.getNumOfCols(); col++) {
+          gridData.put(GridLocation.of(row, col), value);
+      }
+    }
+    gridData.put(impassableSquare, impassableValue);
+    return ImmutableMap.copyOf(gridData);
   }
 }

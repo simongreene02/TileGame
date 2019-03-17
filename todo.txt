@@ -1,4 +1,5 @@
 -Make readme.
 -Optimize MazeGenerator.
 -Create MazeGenerator test.
--Modify GridDataSource and GridLayer to use ImmutableMap<GridLocation, Integer>.
+-Increase test coverage.
+-Fix wall bug.
