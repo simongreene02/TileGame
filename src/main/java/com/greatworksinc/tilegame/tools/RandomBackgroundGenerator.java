@@ -2,30 +2,43 @@ package com.greatworksinc.tilegame.tools;
 
 import com.google.common.collect.ImmutableMap;
 import com.greatworksinc.tilegame.model.GridDataSource;
+import com.greatworksinc.tilegame.model.GridDataSourceGenerator;
 import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.awt.*;
 import java.util.Random;
 
-public class RandomBackgroundGenerator implements GridDataSource {
+@Singleton
+public class RandomBackgroundGenerator implements GridDataSourceGenerator {
 
   private final GridSize gridSize;
   private final Random random;
+
+  /**
+   * Generated level used currently. Is not final and can be mutated by the function generateNewMap
+   */
+  private ImmutableMap<GridLocation, Integer> generatedMap;
 
   @Inject
   public RandomBackgroundGenerator(GridSize gridSize, Random random) {
     this.gridSize = gridSize;
     this.random = random;
+
+    generateNewMap();
   }
 
   @Override
   public ImmutableMap<GridLocation, Integer> getDataAsMap() {
-    return generateMaze(gridSize.getNumOfCols(), gridSize.getNumOfRows());
+    return generatedMap;
   }
 
-  private ImmutableMap<GridLocation, Integer> generateMaze(int width, int height) {
+  @Override
+  public void generateNewMap() {
+    int width = gridSize.getNumOfCols();
+    int height = gridSize.getNumOfRows();
     boolean[][] maze = new boolean[height][width];
     Point cursor = new Point();
     int direction;
@@ -80,7 +93,7 @@ public class RandomBackgroundGenerator implements GridDataSource {
       }
     }
 
-    return outList.build();
+    generatedMap = outList.build();
   }
 
   private static boolean isTileInDirection(Point cursor, int direction, boolean[][] maze) {

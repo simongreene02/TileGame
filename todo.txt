@@ -1,5 +1,5 @@
 -Make readme.
+-Fix infinite loop.
 -Optimize MazeGenerator.
 -Create MazeGenerator test.
 -Increase test coverage.
--Fix wall bug.

@@ -17,16 +17,18 @@ public class MovementService {
   private static final Logger log = LoggerFactory.getLogger(MovementService.class);
   private final GridSize gridSize;
   private final ImmutableSet<Integer> inaccessibleSprites;
-  private final ImmutableMap<GridLocation, Integer> tileLayer;
+  private final GridDataSource tileLayerSource;
 
   @Inject
   public MovementService(@Inaccessible ImmutableSet<Integer> inaccessibleSprites, @MazeBackground GridDataSource tileLayerSource, GridSize gridSize) {
     this.inaccessibleSprites = inaccessibleSprites;
-    this.tileLayer = tileLayerSource.getDataAsMap();
+    this.tileLayerSource = tileLayerSource;
     this.gridSize = gridSize;
   }
 
   public boolean move(CharacterState characterState, int keyCode) {
+    ImmutableMap<GridLocation, Integer> tileLayer = tileLayerSource.getDataAsMap();
+
     GridLocation finalLocation = null;
     switch (keyCode) {
       case VK_UP:

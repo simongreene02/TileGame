@@ -35,7 +35,7 @@ public class GamePanel extends Abstract2DPanel {
   private final ImmutableSet<Integer> exitTileIDs;
   private final int maxLevel;
   private int level;
-  private GridDataSource backgroundGenerator;
+  private GridDataSourceGenerator backgroundGenerator;
 
 
   @Inject
@@ -45,7 +45,7 @@ public class GamePanel extends Abstract2DPanel {
                    MovementService movementService,
                    GridSize gridSize,
                    GridLayerFactory backgroundLayerFactory,
-                   @MazeBackground GridDataSource backgroundGenerator,
+                   @MazeBackground GridDataSourceGenerator backgroundGenerator,
                    @MazeForeground GridDataSource foregroundGenerator,
                    ImmutableSet<Integer> exitTileIDs,
                    int maxLevel) {
@@ -117,6 +117,7 @@ public class GamePanel extends Abstract2DPanel {
         }
       } else {
         level++;
+        backgroundGenerator.generateNewMap();
         backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
         player.setPosition(GridLocation.of(0, 0));
       }

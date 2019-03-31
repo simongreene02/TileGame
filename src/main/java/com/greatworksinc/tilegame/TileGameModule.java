@@ -8,10 +8,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.gui.MainFrame;
 import com.greatworksinc.tilegame.gui.MainPanel;
-import com.greatworksinc.tilegame.model.GridDataSource;
-import com.greatworksinc.tilegame.model.GridLayer;
-import com.greatworksinc.tilegame.model.GridLayerFactory;
-import com.greatworksinc.tilegame.model.GridSize;
+import com.greatworksinc.tilegame.model.*;
 import com.greatworksinc.tilegame.tools.ForegroundGenerator;
 import com.greatworksinc.tilegame.tools.RandomBackgroundGenerator;
 import com.greatworksinc.tilegame.util.MoreResources;
@@ -132,6 +129,14 @@ public class TileGameModule extends PrivateModule {
   @Singleton
   @MazeBackground
   private GridDataSource provideBackgroundLayer(RandomBackgroundGenerator impl) {
+    log.info("provideBackgroundLayer");
+    return impl;
+  }
+
+  @Provides
+  @Singleton
+  @MazeBackground
+  private GridDataSourceGenerator provideBackgroundLayerGenerator(RandomBackgroundGenerator impl) {
     log.info("provideBackgroundLayer");
     return impl;
   }
