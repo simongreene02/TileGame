@@ -1,5 +1,6 @@
 package com.greatworksinc.tilegame.tools;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.greatworksinc.tilegame.model.GridDataSource;
 import com.greatworksinc.tilegame.model.GridDataSourceGenerator;
@@ -46,13 +47,22 @@ public class RandomBackgroundGenerator implements GridDataSourceGenerator {
 
 
     do {
+      int loops = 0;
+      final int maxLoop = 1000;
       do {
         cursor.setLocation(random.nextInt(width / 2) * 2, random.nextInt(height / 2) * 2);
         direction = random.nextInt(4) * 90;
-      } while (isTileInDirection(cursor, direction, maze) || !maze[cursor.y][cursor.x]);
+        System.out.println("a " + loops);
+        loops++;
+      } while ((isTileInDirection(cursor, direction, maze) || !maze[cursor.y][cursor.x]) && loops < maxLoop);
+      if (loops >= maxLoop) {
+        System.out.println("inf loop");
+        throw new RuntimeException(String.format("Cursor X: %s, Cursor Y: %s, Direction: %s", cursor.x, cursor.y, direction));
+      }
       boolean isForward = !isTileInDirection(cursor, direction, maze);
       boolean isLeft = !isTileInDirection(cursor, direction - 90, maze);
       boolean isRight = !isTileInDirection(cursor, direction + 90, maze);
+      System.out.println("b");
       while (isForward || isLeft || isRight) {
         if (!isForward || random.nextInt(2) == 0) {
           if (isLeft && isRight) {
@@ -78,6 +88,7 @@ public class RandomBackgroundGenerator implements GridDataSourceGenerator {
         isForward = !isTileInDirection(cursor, direction, maze);
         isLeft = !isTileInDirection(cursor, direction - 90, maze);
         isRight = !isTileInDirection(cursor, direction + 90, maze);
+        System.out.println("c");
       }
     } while (!isMazeFinished(maze));
 
@@ -96,7 +107,16 @@ public class RandomBackgroundGenerator implements GridDataSourceGenerator {
     generatedMap = outList.build();
   }
 
-  private static boolean isTileInDirection(Point cursor, int direction, boolean[][] maze) {
+  /**
+   * p = (5,7)
+   *
+   * f(p, maze, 0) = (7,7)
+   * f(p, maze, 90) = (5,5)
+   * f(p, maze, 180) = (3,7)
+   * f(p, maze, 270) = (5,9)
+   */
+  @VisibleForTesting
+  static boolean isTileInDirection(Point cursor, int direction, boolean[][] maze) {
     int x = cursor.x + (int) Math.cos(Math.toRadians(direction)) * 2;
     int y = cursor.y + (int) Math.sin(Math.toRadians(direction)) * 2;
     if (y >= 0 && y < maze.length && x >= 0 && x < maze[0].length) {
@@ -106,14 +126,17 @@ public class RandomBackgroundGenerator implements GridDataSourceGenerator {
     }
   }
 
-  private static boolean isMazeFinished(boolean[][] maze) {
+  @VisibleForTesting static boolean isMazeFinished(boolean[][] maze) {
+    System.out.println("d");
     for (int i = 0; i <= maze.length; i += 2) {
       for (int j = 0; j <= maze[0].length; j += 2) {
         if (!maze[i][j]) {
+          System.out.println("e");
           return false;
         }
       }
     }
+    System.out.println("e");
     return true;
   }
 }
