@@ -1,5 +1,7 @@
 package com.greatworksinc.tilegame;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.ArrayList;
 
 //Taken from http://jonathanzong.com/blog/2012/11/06/maze-generation-with-prims-algorithm
@@ -51,8 +53,8 @@ public class Prim {
       Point op = cu.opposite();
       try {
         // if both node and its opposite are walls
-        if (maz[cu.r][cu.c] == '+') {
-          if (maz[op.r][op.c] == '+') {
+        if (isPointInList(maz, cu) && maz[cu.r][cu.c] == '+') {
+          if (isPointInList(maz, op) && maz[op.r][op.c] == '+') {
 
             // open path between the nodes
             maz[cu.r][cu.c] = '-';
@@ -68,11 +70,11 @@ public class Prim {
                   continue;
                 }
                 try {
-                  if (maz[op.r + x][op.c + y] == '-') {
+                  if (isPointInList(maz, op) && maz[op.r + x][op.c + y] == '-') {
                     continue;
                   }
                 } catch (Exception e) {
-                  throw new RuntimeException("TODO: Fill in boundry check");
+                  throw new RuntimeException("TODO: Fill in boundry check", e);
                 }
                 frontier.add(new Point(op.r + x, op.c + y, op));
               }
@@ -98,7 +100,10 @@ public class Prim {
     }
   }
 
-
+  @VisibleForTesting
+  static boolean isPointInList(char[][] maze, Point point) {
+    return point.r >= 0 && point.r < maze.length && point.c >= 0 && point.c < maze[point.r].length;
+  }
 
   static class Point {
     Integer r;

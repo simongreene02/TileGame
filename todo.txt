@@ -1,5 +1,5 @@
 -Make readme.
--Create isTileInDirection test.
+-Clean up Prim code.
 -Fix infinite loop.
 -Optimize MazeGenerator.
 -Create MazeGenerator test.
