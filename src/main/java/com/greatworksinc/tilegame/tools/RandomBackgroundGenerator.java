@@ -92,6 +92,10 @@ public class RandomBackgroundGenerator implements GridDataSourceGenerator {
       }
     } while (!isMazeFinished(maze));
 
+    buildMap(maze);
+  }
+
+  private void buildMap(boolean[][] maze) {
     ImmutableMap.Builder<GridLocation, Integer> outList = ImmutableMap.builder();
 
     for (int i = 0; i < gridSize.getNumOfCols(); i++) {
