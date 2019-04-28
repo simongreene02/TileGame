@@ -17,9 +17,14 @@ public class Prim {
   public static void main(String[] args) {
   }
 
-  public Prim(int numOfRows, int numOfCols) {
+  public Prim(int numOfRows, int numOfCols, long seed) {
+    this(numOfRows, numOfCols, new Random(seed));
+  }
+
+  @VisibleForTesting Prim(int numOfRows, int numOfCols, Random random) {
     this.numOfRows = numOfRows;
     this.numOfCols = numOfCols;
+    this.random = random;
   }
 
   public void generateMaze() {
@@ -62,7 +67,7 @@ public class Prim {
     while (!frontier.isEmpty()) {
 
       // pick current node at random
-      Point cu = frontier.remove((int) (Math.random() * frontier.size()));
+      Point cu = frontier.remove(random.nextInt(frontier.size()));
       Point op = cu.opposite();
       try {
         // if both node and its opposite are walls
