@@ -15,6 +15,18 @@ public class Prim {
 
 
   public static void main(String[] args) {
+    if (args.length != 4) {
+      System.out.println("Usage: ./bin/tilegame <number of rows> <number of columns> <number of mazes> <seed>");
+      System.out.println("Example: ./bin/tilegame 18 10 3 0");
+      return;
+    }
+
+
+    Prim prim = new Prim(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[3]));
+    int iterations = Integer.parseInt(args[2]);
+    for (int i = 0; i < iterations; i++) {
+      prim.generateMaze();
+    }
   }
 
   public Prim(int numOfRows, int numOfCols, long seed) {
