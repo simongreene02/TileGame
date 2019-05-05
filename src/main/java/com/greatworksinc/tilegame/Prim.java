@@ -2,6 +2,11 @@ package com.greatworksinc.tilegame;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,9 +20,9 @@ public class Prim {
 
 
   public static void main(String[] args) {
-    if (args.length != 4) {
-      System.out.println("Usage: ./bin/tilegame <number of rows> <number of columns> <number of mazes> <seed>");
-      System.out.println("Example: ./bin/tilegame 18 10 3 0");
+    if (args.length != 4 && args.length != 5) {
+      System.out.println("Usage: ./bin/tilegame <number of rows> <number of columns> <number of mazes> <seed> [directory]");
+      System.out.println("Example: ./bin/tilegame 18 10 3 0 [~/Documents/Mazes]");
       return;
     }
 
@@ -25,7 +30,20 @@ public class Prim {
     Prim prim = new Prim(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[3]));
     int iterations = Integer.parseInt(args[2]);
     for (int i = 0; i < iterations; i++) {
-      prim.generateMaze();
+      if (args.length == 4) {
+        System.out.println(prim.generateMaze());
+      } else {
+        try {
+
+          File mazeFile = new File(args[4]+"/maze"+i+".map");
+          mazeFile.createNewFile();
+          FileOutputStream mazeFileWriter = new FileOutputStream(mazeFile);
+          mazeFileWriter.write(prim.generateMaze().getBytes());
+          mazeFileWriter.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 
@@ -39,7 +57,7 @@ public class Prim {
     this.random = random;
   }
 
-  public void generateMaze() {
+  public String generateMaze() {
     // dimensions of generated maze
 
     // build maze and initialize with only walls
@@ -121,13 +139,26 @@ public class Prim {
       }
     }
 
-    // print final maze
-    for (int i = 0; i < numOfRows; i++) {
-      for (int j = 0; j < numOfCols; j++) {
-        System.out.print(maz[i][j]);
+//    print final maze
+//
+//    for (int i = 0; i < numOfRows; i++) {
+//      for (int j = 0; j < numOfCols; j++) {
+//        System.out.print(maz[i][j]);
+//      }
+//      System.out.println();
+//    }
+
+    //return final maze
+    String outputString = "";
+
+    for (char[] col : maz) {
+      for (char tile : col) {
+        outputString += tile;
       }
-      System.out.println();
+      outputString += "\n";
     }
+
+    return outputString;
   }
 
   @VisibleForTesting
