@@ -79,7 +79,7 @@ public class GamePanel extends Abstract2DPanel {
   private void paintTerrain(Graphics2D g) {
     for (int row = 0; row < gridSize.getNumOfRows(); row++) {
       for (int col = 0; col < gridSize.getNumOfCols(); col++) {
-        int backgroundTile = backgroundLayer.getGidByLocation(GridLocation.of(row, col));
+        int backgroundTile = backgroundLayer.getGidByLocation(GridLocation.of(row, col)); //Example getTileIndexAt(int rowIndex, int colIndex)
         int foregroundTile = foregroundLayer.getGidByLocation(GridLocation.of(row, col));
         drawSprite(g, mazeTileLoader.getTile(backgroundTile), row, col);
         if (foregroundTile != 0) {
@@ -116,7 +116,7 @@ public class GamePanel extends Abstract2DPanel {
           System.exit(0);
         }
       } else {
-        level++;
+        level++; //Use this variable to generate URL for level CSV file. (return TerrainField.from(MoreResources.getResource("terrain_"+level".csv"));)
         backgroundGenerator.generateNewMap();
         backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
         player.setPosition(GridLocation.of(0, 0));
