@@ -1,11 +1,14 @@
 package com.greatworksinc.tilegame;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.greatworksinc.tilegame.annotations.Maze;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,37 +16,47 @@ import java.util.Random;
 //Taken from http://jonathanzong.com/blog/2012/11/06/maze-generation-with-prims-algorithm
 
 public class Prim {
+  enum MazeTile {
+    FLOOR('-', 15),
+    WALL('+', 75),
+    START_POS('S', 58),
+    END_POS('E', 57);
+    private char tile;
+    private int gid;
+    MazeTile(char tile, int gid) {
+      this.tile = tile;
+      this.gid = gid;
+    }
+
+    public char getTile() {
+      return tile;
+    }
+
+    public int getGid() {
+      return gid;
+    }
+  }
+
   private final int numOfRows;
   private final int numOfCols;
 
   private final Random random;
 
 
-  public static void main(String[] args) {
-    if (args.length != 4 && args.length != 5) {
-      System.out.println("Usage: ./bin/tilegame <number of rows> <number of columns> <number of mazes> <seed> [directory]");
-      System.out.println("Example: ./bin/tilegame 18 10 3 0 [~/Documents/Mazes]");
+  public static void main(String[] args) throws IOException {
+    if (args.length != 5) {
+      System.out.println("Usage: ./bin/tilegame <number of rows> <number of columns> <number of mazes> <seed> <directory>");
+      System.out.println("Example: ./bin/tilegame 18 10 3 0 ~/Documents/Mazes");
       return;
     }
 
 
     Prim prim = new Prim(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[3]));
     int iterations = Integer.parseInt(args[2]);
+    Path path = Paths.get(args[4]);
+    Files.createDirectories(path);
     for (int i = 0; i < iterations; i++) {
-      if (args.length == 4) {
-        System.out.println(prim.generateMaze());
-      } else {
-        try {
-
-          File mazeFile = new File(args[4]+"/maze"+i+".map");
-          mazeFile.createNewFile();
-          FileOutputStream mazeFileWriter = new FileOutputStream(mazeFile);
-          mazeFileWriter.write(prim.generateMaze().getBytes());
-          mazeFileWriter.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      Prim.writeFile(prim.generateMaze(), Paths.get(path.toString(), "maze"+i+".txt"));
     }
   }
 
@@ -57,22 +70,20 @@ public class Prim {
     this.random = random;
   }
 
-  public String generateMaze() {
+  public MazeTile[][] generateMaze() {
     // dimensions of generated maze
 
     // build maze and initialize with only walls
-    StringBuilder s = new StringBuilder(numOfCols);
-    for (int x = 0; x < numOfCols; x++) {
-      s.append('+');
-    }
-    char[][] maz = new char[numOfRows][numOfCols];
+    MazeTile[][] maze = new MazeTile[numOfRows][numOfCols];
     for (int x = 0; x < numOfRows; x++) {
-      maz[x] = s.toString().toCharArray();
+      for (int y = 0; y < numOfCols; y++) {
+        maze[x][y]=MazeTile.WALL;
+      }
     }
 
     // select random point and open as start node
     Point st = new Point((random.nextInt(numOfRows)), (random.nextInt(numOfCols)), null);
-    maz[st.r][st.c] = 'S';
+    maze[st.r][st.c] = MazeTile.START_POS;
 
     // iterate through direct neighbors of node
     ArrayList<Point> frontier = new ArrayList<>();
@@ -82,7 +93,7 @@ public class Prim {
           continue;
         }
         try {
-          if (isPointInList(maz, new Point(st.r + x, st.c + y, null)) && maz[st.r + x][st.c + y] == '-') {
+          if (isPointInList(maze, new Point(st.r + x, st.c + y, null)) && maze[st.r + x][st.c + y] == MazeTile.FLOOR) {
             continue;
           }
         } catch (Exception e) { // ignore ArrayIndexOutOfBounds
@@ -101,12 +112,12 @@ public class Prim {
       Point op = cu.opposite();
       try {
         // if both node and its opposite are walls
-        if (isPointInList(maz, cu) && maz[cu.r][cu.c] == '+') {
-          if (isPointInList(maz, op) && maz[op.r][op.c] == '+') {
+        if (isPointInList(maze, cu) && maze[cu.r][cu.c] == MazeTile.WALL) {
+          if (isPointInList(maze, op) && maze[op.r][op.c] == MazeTile.WALL) {
 
             // open path between the nodes
-            maz[cu.r][cu.c] = '-';
-            maz[op.r][op.c] = '-';
+            maze[cu.r][cu.c] = MazeTile.FLOOR;
+            maze[op.r][op.c] = MazeTile.FLOOR;
 
             // store last node in order to mark it later
             last = op;
@@ -118,7 +129,7 @@ public class Prim {
                   continue;
                 }
                 try {
-                  if (isPointInList(maz, new Point(op.r + x, op.c + y, null)) && maz[op.r + x][op.c + y] == '-') {
+                  if (isPointInList(maze, new Point(op.r + x, op.c + y, null)) && maze[op.r + x][op.c + y] == MazeTile.FLOOR) {
                     continue;
                   }
                 } catch (Exception e) {
@@ -135,34 +146,29 @@ public class Prim {
 
       // if algorithm has resolved, mark end node
       if (frontier.isEmpty()) {
-        maz[last.r][last.c] = 'E';
+        maze[last.r][last.c] = MazeTile.END_POS;
       }
     }
+    return maze;
+  }
 
-//    print final maze
-//
-//    for (int i = 0; i < numOfRows; i++) {
-//      for (int j = 0; j < numOfCols; j++) {
-//        System.out.print(maz[i][j]);
-//      }
-//      System.out.println();
-//    }
-
-    //return final maze
-    String outputString = "";
-
-    for (char[] col : maz) {
-      for (char tile : col) {
-        outputString += tile;
+  private static void writeFile(MazeTile[][] maze, Path destinationFile) {
+    StringBuilder out = new StringBuilder();
+    for (int x = 0; x < maze.length; x++) {
+      for (int y = 0; y < maze[x].length; y++) {
+       out.append(maze[x][y].getGid()+",");
       }
-      outputString += "\n";
+      out.append('\n');
     }
-
-    return outputString;
+    try {
+      Files.write(destinationFile, out.toString().getBytes());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @VisibleForTesting
-  static boolean isPointInList(char[][] maze, Point point) {
+  static boolean isPointInList(MazeTile[][] maze, Point point) {
     return point.r >= 0 && point.r < maze.length && point.c >= 0 && point.c < maze[point.r].length;
   }
 
