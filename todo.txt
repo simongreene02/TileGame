@@ -1,5 +1,4 @@
 -Make readme.
--Clean up Prim code.
 -Change argument names to constants.
 -Figure out how to run with arguments in Gradle.
 -Add support for reading levels from file. (return TerrainField.from(MoreResources.getResource("terrain_28.csv"));)

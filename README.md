@@ -1,1 +1,2 @@
 # TileGame
+./gradlew build jacocoTestReport
