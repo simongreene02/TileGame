@@ -67,7 +67,7 @@ public class Prim {
     int iterations = Integer.parseInt(parsedArgs.getOptionValue("mazes"));
     Path path = Paths.get(parsedArgs.getOptionValue("directory"));
     Files.createDirectories(path);
-    AbstractMazeFileWriter mazeFileWriter = new AbstractMazeFileWriter.MazeWriterCSV(prim, path);
+    AbstractMazeFileWriter mazeFileWriter = AbstractMazeFileWriter.createMazeFileWriter(parsedArgs.hasOption("tileMode"), prim, path);
     for (int i = 0; i < iterations; i++) {
 //      Prim.generateOutputInCSV(prim.generateMaze(), Paths.get(path.toString(), "maze" + i + ".txt"));
       mazeFileWriter.writeFile();
