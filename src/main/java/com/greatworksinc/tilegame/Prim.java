@@ -1,11 +1,11 @@
 package com.greatworksinc.tilegame;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.greatworksinc.tilegame.annotations.Maze;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,19 +44,33 @@ public class Prim {
 
 
   public static void main(String[] args) throws IOException {
-    if (args.length != 5) {
-      System.out.println("Usage: ./bin/tilegame <number of rows> <number of columns> <number of mazes> <seed> <directory>");
-      System.out.println("Example: ./bin/tilegame 18 10 3 0 ~/Documents/Mazes");
-      return;
+    Options options = new Options();
+
+    options.addRequiredOption("r", "rows", true, "The number of rows generated in each maze.");
+    options.addRequiredOption("c", "columns", true, "The number of columns generated in each maze.");
+    options.addRequiredOption("m", "mazes", true, "The number of mazes created in maze generation.");
+    options.addRequiredOption("s", "seed", true, "The random seed used in maze generation.");
+    options.addRequiredOption("d", "directory", true, "The directory that maze files are saved to.");
+
+    options.addOption("t", "tileMode", false, "Render outputs as ASCII tiles instead of CSV.");
+    options.addOption("p", "printToConsole", false, "Print outputs to console instead of writing them to file.");
+
+    CommandLine parsedArgs = null;
+    try {
+      parsedArgs = new DefaultParser().parse( options, args);
+    } catch (ParseException e) {
+      e.printStackTrace();
     }
 
-
-    Prim prim = new Prim(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[3]));
-    int iterations = Integer.parseInt(args[2]);
-    Path path = Paths.get(args[4]);
+    Prim prim = new Prim(Integer.parseInt(parsedArgs.getOptionValue("rows")), Integer.parseInt(parsedArgs.getOptionValue("columns")),
+        Integer.parseInt(parsedArgs.getOptionValue("seed")));
+    int iterations = Integer.parseInt(parsedArgs.getOptionValue("mazes"));
+    Path path = Paths.get(parsedArgs.getOptionValue("directory"));
     Files.createDirectories(path);
+    AbstractMazeFileWriter mazeFileWriter = new AbstractMazeFileWriter.MazeWriterCSV(prim, path);
     for (int i = 0; i < iterations; i++) {
-      Prim.writeFile(prim.generateMaze(), Paths.get(path.toString(), "maze"+i+".txt"));
+//      Prim.generateOutputInCSV(prim.generateMaze(), Paths.get(path.toString(), "maze" + i + ".txt"));
+      mazeFileWriter.writeFile();
     }
   }
 
@@ -152,16 +166,33 @@ public class Prim {
     return maze;
   }
 
-  private static void writeFile(MazeTile[][] maze, Path destinationFile) {
+  private static void generateOutputInCSV(MazeTile[][] maze, Path destinationFile) {
     StringBuilder out = new StringBuilder();
     for (int x = 0; x < maze.length; x++) {
       for (int y = 0; y < maze[x].length; y++) {
-       out.append(maze[x][y].getGid()+",");
+        out.append(maze[x][y].getGid()+",");
       }
       out.append('\n');
     }
+    out.delete(out.length()-2, out.length());
+    writeFile(out.toString(), destinationFile);
+  }
+
+  private static void generateOutputInASCII(MazeTile[][] maze, Path destinationFile) {
+    StringBuilder out = new StringBuilder();
+    for (int x = 0; x < maze.length; x++) {
+      for (int y = 0; y < maze[x].length; y++) {
+        out.append(maze[x][y].getTile());
+      }
+      out.append('\n');
+    }
+    out.delete(out.length()-1, out.length());
+    writeFile(out.toString(), destinationFile);
+  }
+
+  private static void writeFile(String mazeOutput, Path destinationFile) {
     try {
-      Files.write(destinationFile, out.toString().getBytes());
+      Files.write(destinationFile, mazeOutput.getBytes());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

@@ -33,6 +33,7 @@ ext {
     junitJupiterVersion = '5.3.1'
     mockitoVersion = '2.23.0'
     truthVersion = '0.42'
+    cliVersion = '1.4'
 }
 
 dependencies {
@@ -42,6 +43,7 @@ dependencies {
     compile "com.google.inject:guice:${guiceVersion}"
     compile "com.google.inject.extensions:guice-assistedinject:${guiceVersion}"
     compile "com.google.code.findbugs:jsr305:${findbugsVersion}"
+    compile "commons-cli:commons-cli:${cliVersion}"
 
     // test dependencies
 

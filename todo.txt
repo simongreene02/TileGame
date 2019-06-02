@@ -1,8 +1,5 @@
 -Make readme.
 -Clean up Prim code.
--Modify directory output code to use Paths and Files.
--Modify directory output code to output CSV.
--Use https://commons.apache.org/proper/commons-cli/usage.html to handle arguments.
 -Figure out how to run with arguments in Gradle.
 -Add support for reading levels from file. (return TerrainField.from(MoreResources.getResource("terrain_28.csv"));)
 -Increase test coverage.
