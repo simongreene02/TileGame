@@ -9,6 +9,7 @@ import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.gui.MainFrame;
 import com.greatworksinc.tilegame.gui.MainPanel;
 import com.greatworksinc.tilegame.model.*;
+import com.greatworksinc.tilegame.tools.BackgroundMazeReader;
 import com.greatworksinc.tilegame.tools.ForegroundGenerator;
 import com.greatworksinc.tilegame.tools.RandomBackgroundGenerator;
 import com.greatworksinc.tilegame.util.MoreResources;
@@ -127,8 +128,16 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
+  @RandomMazeBackground
+  private GridDataSource provideRandomBackgroundLayer(RandomBackgroundGenerator impl) {
+    log.info("provideBackgroundLayer");
+    return impl;
+  }
+
+  @Provides
+  @Singleton
   @MazeBackground
-  private GridDataSource provideBackgroundLayer(RandomBackgroundGenerator impl) {
+  private GridDataSource provideBackgroundLayer(BackgroundMazeReader impl) {
     log.info("provideBackgroundLayer");
     return impl;
   }

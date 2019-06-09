@@ -1,4 +1,3 @@
--Make readme.
--Figure out how to run with arguments in Gradle.
+-Add condition to build.gradle that allows running of both Prim and Main.
 -Add support for reading levels from file. (return TerrainField.from(MoreResources.getResource("terrain_28.csv"));)
 -Increase test coverage.
