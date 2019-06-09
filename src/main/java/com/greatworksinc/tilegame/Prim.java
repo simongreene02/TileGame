@@ -37,39 +37,42 @@ public class Prim {
     }
   }
 
+  private static final String ROWS_ARG = "rows";
+  private static final String COLS_ARG = "columns";
+  private static final String MAZES_ARG = "mazes";
+  private static final String SEED_ARG = "seed";
+  private static final String DIRECTORY_ARG = "directory";
+  private static final String TILEMODE_ARG = "tileMode";
+
   private final int numOfRows;
   private final int numOfCols;
 
   private final Random random;
 
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, ParseException {
     Options options = new Options();
 
-    options.addRequiredOption("r", "rows", true, "The number of rows generated in each maze.");
-    options.addRequiredOption("c", "columns", true, "The number of columns generated in each maze.");
-    options.addRequiredOption("m", "mazes", true, "The number of mazes created in maze generation.");
-    options.addRequiredOption("s", "seed", true, "The random seed used in maze generation.");
-    options.addRequiredOption("d", "directory", true, "The directory that maze files are saved to.");
+    options.addRequiredOption("r", ROWS_ARG, true, "The number of rows generated in each maze.");
+    options.addRequiredOption("c", COLS_ARG, true, "The number of columns generated in each maze.");
+    options.addRequiredOption("m", MAZES_ARG, true, "The number of mazes created in maze generation.");
+    options.addRequiredOption("s", SEED_ARG, true, "The random seed used in maze generation.");
+    options.addRequiredOption("d", DIRECTORY_ARG, true, "The directory that maze files are saved to.");
 
-    options.addOption("t", "tileMode", false, "Render outputs as ASCII tiles instead of CSV.");
-    options.addOption("p", "printToConsole", false, "Print outputs to console instead of writing them to file.");
+    options.addOption("t", TILEMODE_ARG, false, "Render outputs as ASCII tiles instead of CSV.");
 
-    CommandLine parsedArgs = null;
-    try {
-      parsedArgs = new DefaultParser().parse( options, args);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+    CommandLine parsedArgs = new DefaultParser().parse(options, args);
 
-    Prim prim = new Prim(Integer.parseInt(parsedArgs.getOptionValue("rows")), Integer.parseInt(parsedArgs.getOptionValue("columns")),
-        Integer.parseInt(parsedArgs.getOptionValue("seed")));
-    int iterations = Integer.parseInt(parsedArgs.getOptionValue("mazes"));
-    Path path = Paths.get(parsedArgs.getOptionValue("directory"));
+    Prim prim = new Prim(
+        Integer.parseInt(parsedArgs.getOptionValue(ROWS_ARG)),
+        Integer.parseInt(parsedArgs.getOptionValue(COLS_ARG)),
+        Integer.parseInt(parsedArgs.getOptionValue(SEED_ARG)));
+    int iterations = Integer.parseInt(parsedArgs.getOptionValue(MAZES_ARG));
+    Path path = Paths.get(parsedArgs.getOptionValue(DIRECTORY_ARG));
     Files.createDirectories(path);
-    AbstractMazeFileWriter mazeFileWriter = AbstractMazeFileWriter.createMazeFileWriter(parsedArgs.hasOption("tileMode"), prim, path);
+    AbstractMazeFileWriter mazeFileWriter = AbstractMazeFileWriter.createMazeFileWriter(
+        parsedArgs.hasOption(TILEMODE_ARG), prim, path);
     for (int i = 0; i < iterations; i++) {
-//      Prim.generateOutputInCSV(prim.generateMaze(), Paths.get(path.toString(), "maze" + i + ".txt"));
       mazeFileWriter.writeFile();
     }
   }

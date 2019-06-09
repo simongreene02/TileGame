@@ -13,8 +13,8 @@ sourceSets {
     }
 }
 
-mainClassName = 'com.greatworksinc.tilegame.Main'
-//mainClassName = 'com.greatworksinc.tilegame.Prim'
+//mainClassName = 'com.greatworksinc.tilegame.Main'
+mainClassName = 'com.greatworksinc.tilegame.Prim'
 group 'com.greatworksinc'
 version '1.0-SNAPSHOT'
 
