@@ -187,7 +187,15 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
+  @FileTemplate
+  private String provideFileTemplate() {
+    return "maze%d.csv";
+  }
+
+  @Provides
+  @Singleton
+  @MaxLevel
   private int provideMaxLevel() {
-    return 3;
+    return 1;
   }
 }

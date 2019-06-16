@@ -1,1 +1,2 @@
+-Implement maze1.csv rendering in GamePanel.
 -Increase test coverage.

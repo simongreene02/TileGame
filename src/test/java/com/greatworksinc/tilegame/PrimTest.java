@@ -3,18 +3,16 @@ package com.greatworksinc.tilegame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.greatworksinc.tilegame.Prim.isPointInList;
-
 import static com.google.common.truth.Truth.assertThat;
 
 
 class PrimTest {
 
-  private char[][] maze;
+  private Prim.MazeTile[][] maze;
 
   @BeforeEach
   void setUp() {
-    maze = new char[][] {{'.', '.', '.'}, {'.', '.', '.'}, {'.', '.', '.'}, {'.', '.', '.'}};
+    maze = new Prim.MazeTile[][] {{Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR}, {Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR}, {Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR}, {Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR, Prim.MazeTile.FLOOR}};
   }
 
   @Test

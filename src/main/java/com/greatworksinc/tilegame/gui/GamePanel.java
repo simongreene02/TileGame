@@ -48,7 +48,7 @@ public class GamePanel extends Abstract2DPanel {
                    @MazeBackground GridDataSourceGenerator backgroundGenerator,
                    @MazeForeground GridDataSource foregroundGenerator,
                    ImmutableSet<Integer> exitTileIDs,
-                   int maxLevel) {
+                   @MaxLevel int maxLevel) {
     this.mazeTileLoader = mazeTileLoader;
     this.castleTileLoader = castleTileLoader;
     this.characterTileLoader = characterTileLoader;
