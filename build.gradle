@@ -13,8 +13,11 @@ sourceSets {
     }
 }
 
-mainClassName = 'com.greatworksinc.tilegame.Main'
-//mainClassName = 'com.greatworksinc.tilegame.Prim'
+if (project.hasProperty("buildMaze") && project.getProperties().get("buildMaze")==true) {
+    mainClassName = 'com.greatworksinc.tilegame.Prim'
+} else {
+    mainClassName = 'com.greatworksinc.tilegame.Main'
+}
 group 'com.greatworksinc'
 version '1.0-SNAPSHOT'
 
