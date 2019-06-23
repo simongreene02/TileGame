@@ -35,7 +35,7 @@ public class GamePanel extends Abstract2DPanel {
   private final ImmutableSet<Integer> exitTileIDs;
   private final int maxLevel;
   private int level;
-  private GridDataSourceGenerator backgroundGenerator;
+  private GridDataSource backgroundGenerator;
 
 
   @Inject
@@ -45,7 +45,8 @@ public class GamePanel extends Abstract2DPanel {
                    MovementService movementService,
                    GridSize gridSize,
                    GridLayerFactory backgroundLayerFactory,
-                   @MazeBackground GridDataSourceGenerator backgroundGenerator,
+                   //@MazeBackground GridDataSourceGenerator backgroundGenerator,
+                   @MazeBackground GridDataSource backgroundGenerator,
                    @MazeForeground GridDataSource foregroundGenerator,
                    ImmutableSet<Integer> exitTileIDs,
                    @MaxLevel int maxLevel) {
@@ -117,7 +118,7 @@ public class GamePanel extends Abstract2DPanel {
         }
       } else {
         level++; //Use this variable to generate URL for level CSV file. (return TerrainField.from(MoreResources.getResource("terrain_"+level".csv"));)
-        backgroundGenerator.generateNewMap();
+        //backgroundGenerator.generateNewMap();
         backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
         player.setPosition(GridLocation.of(0, 0));
       }

@@ -37,6 +37,7 @@ ext {
     mockitoVersion = '2.23.0'
     truthVersion = '0.42'
     cliVersion = '1.4'
+    jacksonVersion = '2.9.9'
 }
 
 dependencies {
@@ -47,6 +48,9 @@ dependencies {
     compile "com.google.inject.extensions:guice-assistedinject:${guiceVersion}"
     compile "com.google.code.findbugs:jsr305:${findbugsVersion}"
     compile "commons-cli:commons-cli:${cliVersion}"
+    //compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 
     // test dependencies
 
