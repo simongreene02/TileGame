@@ -1,12 +1,12 @@
 package com.greatworksinc.tilegame.service;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.greatworksinc.tilegame.model.*;
-import com.greatworksinc.tilegame.util.MoreResources;
+import com.greatworksinc.tilegame.model.CharacterState;
+import com.greatworksinc.tilegame.model.GridDataSource;
+import com.greatworksinc.tilegame.model.GridLocation;
+import com.greatworksinc.tilegame.model.GridSize;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -39,7 +38,7 @@ class MovementServiceTest extends Mockito {
   @BeforeEach
   void setUp() {
     player = new CharacterState();
-    doReturn(createGridData(GRID_SIZE, 15, GridLocation.of(2, 2), 75)).when(gridDataSource).getDataAsMap();
+    doReturn(createGridData(GRID_SIZE, 15, GridLocation.of(2, 2), 75)).when(gridDataSource).getDataAsMap(0);
     movementService = new MovementService(INACCESSIBLE_SPRITES, gridDataSource, GRID_SIZE);
   }
 

@@ -53,12 +53,11 @@ public class GamePanel extends Abstract2DPanel {
     this.gridSize = gridSize;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
-    player = new CharacterState();
+    player = new CharacterState(backgroundGenerator.getStartingLocation(level));
     this.maxLevel = maxLevel;
     this.backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
     this.backgroundGenerator = backgroundGenerator;
-    this.staircaseLocations = backgroundGenerator.getStaircases();
-    level = 1;
+    this.staircaseLocations = backgroundGenerator.getStaircases(level);
   }
 
   @Override

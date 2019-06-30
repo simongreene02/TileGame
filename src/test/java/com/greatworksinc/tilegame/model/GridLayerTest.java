@@ -1,7 +1,6 @@
 package com.greatworksinc.tilegame.model;
 
 import com.google.common.collect.ImmutableMap;
-import com.greatworksinc.tilegame.util.MoreResources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,7 @@ class GridLayerTest extends Mockito {
         .put(GridLocation.of(1, 0), 4)
         .put(GridLocation.of(1, 1), 5)
         .put(GridLocation.of(1, 2), 6)
-        .build()).when(gridDataSource).getDataAsMap();
+        .build()).when(gridDataSource).getDataAsMap(0);
     layer2x3 = new GridLayer(gridDataSource, GridSize.of(2, 3));
   }
 

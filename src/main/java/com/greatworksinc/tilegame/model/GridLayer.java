@@ -11,7 +11,7 @@ public class GridLayer {
 
   @Inject
   public GridLayer(@Assisted GridDataSource gridDataSource, GridSize gridSize) {
-    this.gidByLocation = gridDataSource.getDataAsMap();
+    this.gidByLocation = gridDataSource.getDataAsMap(0);
     this.gridSize = gridSize;
   }
 

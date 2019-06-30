@@ -10,6 +10,7 @@ import com.greatworksinc.tilegame.annotations.MaxLevel;
 import com.greatworksinc.tilegame.annotations.StairFileTemplate;
 import com.greatworksinc.tilegame.model.GridDataSource;
 import com.greatworksinc.tilegame.model.GridLocation;
+import com.greatworksinc.tilegame.model.StaircaseData;
 import com.greatworksinc.tilegame.model.Staircases;
 import com.greatworksinc.tilegame.util.MoreResources;
 
@@ -73,13 +74,19 @@ public class BackgroundMazeReader implements GridDataSource {
   }
 
   @Override
-  public ImmutableMap<GridLocation, Integer> getDataAsMap() {
-    return generatedMazes.get(0);
+  public ImmutableMap<GridLocation, Integer> getDataAsMap(int level) {
+    return generatedMazes.get(level);
   }
 
   @Override
-  public Staircases getStaircases() {
-    return staircaseLocations.get(0);
+  public Staircases getStaircases(int level) {
+    return staircaseLocations.get(level);
+  }
+
+  @Override
+  public GridLocation getStartingLocation(int level) {
+    StaircaseData downStair = staircaseLocations.get(level).getDownStair();
+    return GridLocation.of(downStair.getRow(), downStair.getCol());
   }
 
 }
