@@ -126,33 +126,9 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  @RandomMazeBackground
-  private GridDataSource provideRandomBackgroundLayer(RandomBackgroundGenerator impl) {
-    log.info("provideBackgroundLayer");
-    return impl;
-  }
-
-  @Provides
-  @Singleton
   @MazeBackground
   private GridDataSource provideBackgroundLayer(BackgroundMazeReader impl) {
     log.info("provideBackgroundLayer");
-    return impl;
-  }
-
-  @Provides
-  @Singleton
-  @MazeBackground
-  private GridDataSourceGenerator provideBackgroundLayerGenerator(RandomBackgroundGenerator impl) {
-    log.info("provideBackgroundLayer");
-    return impl;
-  }
-
-  @Provides
-  @Singleton
-  @MazeForeground
-  private GridDataSource provideForegroundLayer(ForegroundGenerator impl) {
-    log.info("provideForegroundLayer");
     return impl;
   }
 
@@ -194,7 +170,7 @@ public class TileGameModule extends PrivateModule {
   @Singleton
   @StairFileTemplate
   private String provideStairFileTemplate() {
-    return "maze%d_stairs.csv";
+    return "maze%d_stairs.json";
   }
 
   @Provides

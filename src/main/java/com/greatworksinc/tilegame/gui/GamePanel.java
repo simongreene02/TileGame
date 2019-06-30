@@ -31,7 +31,6 @@ public class GamePanel extends Abstract2DPanel {
   private GridLayerFactory backgroundLayerFactory;
   private GridLayer backgroundLayer;
   private Staircases staircaseLocations;
-  private final ImmutableSet<Integer> exitTileIDs;
   private final int maxLevel;
   private int level;
   private GridDataSource backgroundGenerator;
@@ -45,7 +44,6 @@ public class GamePanel extends Abstract2DPanel {
                    GridSize gridSize,
                    GridLayerFactory backgroundLayerFactory,
                    @MazeBackground GridDataSource backgroundGenerator,
-                   ImmutableSet<Integer> exitTileIDs,
                    @MaxLevel int maxLevel) {
     this.mazeTileLoader = mazeTileLoader;
     this.castleTileLoader = castleTileLoader;
@@ -53,7 +51,6 @@ public class GamePanel extends Abstract2DPanel {
     this.movementService = movementService;
     this.backgroundLayerFactory = backgroundLayerFactory;
     this.gridSize = gridSize;
-    this.exitTileIDs = exitTileIDs;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
     player = new CharacterState();

@@ -42,14 +42,14 @@ public class BackgroundMazeReader implements GridDataSource {
         generatedMazesBuilder.add(readFile(Paths.get(
             MoreResources.getResource(String.format(fileTemplate, level)).toURI())));
         staircaseLocationsBuilder.add(objectMapper.readValue(
-            Paths.get(
-                MoreResources.getResource(String.format(stairFileTemplate, level)).toURI()
-            ).toFile(), Staircases.class));
+            Paths.get(MoreResources.getResource(String.format(stairFileTemplate, level)).toURI()).toFile(),
+            Staircases.class));
       } catch (URISyntaxException | IOException e) {
         throw new RuntimeException(e);
       }
     }
     generatedMazes = generatedMazesBuilder.build();
+    staircaseLocations = staircaseLocationsBuilder.build();
   }
 
   @VisibleForTesting
