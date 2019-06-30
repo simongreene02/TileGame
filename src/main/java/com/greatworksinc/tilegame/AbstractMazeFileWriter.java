@@ -1,5 +1,7 @@
 package com.greatworksinc.tilegame;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +21,7 @@ public abstract class AbstractMazeFileWriter {
   public void writeFile() {
     try {
       Files.write(destinationFile(), mazeOutput().getBytes());
+      Files.write(staircaseFile(), new ObjectMapper().writeValueAsString(mazeGenerator.getLastStaircases()).getBytes());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -27,6 +30,10 @@ public abstract class AbstractMazeFileWriter {
   private Path destinationFile() {
     counter++;
     return Paths.get(path.toString(), "maze" + counter + ".txt");
+  }
+
+  private Path staircaseFile() {
+    return Paths.get(path.toString(), "maze" + counter + "_stairs.json");
   }
 
   public static AbstractMazeFileWriter createMazeFileWriter(boolean isASCII, Prim mazeGenerator, Path path) {

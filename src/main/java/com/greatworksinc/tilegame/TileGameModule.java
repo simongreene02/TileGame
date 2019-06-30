@@ -10,8 +10,6 @@ import com.greatworksinc.tilegame.gui.MainFrame;
 import com.greatworksinc.tilegame.gui.MainPanel;
 import com.greatworksinc.tilegame.model.*;
 import com.greatworksinc.tilegame.tools.BackgroundMazeReader;
-import com.greatworksinc.tilegame.tools.ForegroundGenerator;
-import com.greatworksinc.tilegame.tools.RandomBackgroundGenerator;
 import com.greatworksinc.tilegame.util.MoreResources;
 import com.greatworksinc.tilegame.util.TileLoader;
 import com.greatworksinc.tilegame.util.TileLoaderFactory;
@@ -190,6 +188,13 @@ public class TileGameModule extends PrivateModule {
   @FileTemplate
   private String provideFileTemplate() {
     return "maze%d.csv";
+  }
+
+  @Provides
+  @Singleton
+  @StairFileTemplate
+  private String provideStairFileTemplate() {
+    return "maze%d_stairs.csv";
   }
 
   @Provides

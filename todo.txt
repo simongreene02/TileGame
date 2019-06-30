@@ -1,3 +1,1 @@
--Modify Prim to generate Staircases object and write with Jackson.
--Modify BackgroundMazeReader to work with Staircases object.
 -Increase test coverage.

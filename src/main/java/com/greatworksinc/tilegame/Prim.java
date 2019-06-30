@@ -1,6 +1,8 @@
 package com.greatworksinc.tilegame;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.greatworksinc.tilegame.model.StaircaseData;
+import com.greatworksinc.tilegame.model.Staircases;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
@@ -48,6 +50,8 @@ public class Prim {
   private final int numOfCols;
 
   private final Random random;
+
+  private Staircases lastStaircases;
 
 
   public static void main(String[] args) throws IOException, ParseException {
@@ -100,7 +104,7 @@ public class Prim {
 
     // select random point and open as start node
     Point st = new Point((random.nextInt(numOfRows)), (random.nextInt(numOfCols)), null);
-    maze[st.r][st.c] = MazeTile.START_POS;
+    //maze[st.r][st.c] = MazeTile.START_POS;
 
     // iterate through direct neighbors of node
     ArrayList<Point> frontier = new ArrayList<>();
@@ -163,47 +167,24 @@ public class Prim {
 
       // if algorithm has resolved, mark end node
       if (frontier.isEmpty()) {
-        maze[last.r][last.c] = MazeTile.END_POS;
+        //maze[last.r][last.c] = MazeTile.END_POS;
       }
     }
+
+    lastStaircases = new Staircases(
+        new StaircaseData(st.r, st.c, MazeTile.START_POS.gid),
+        new StaircaseData(last.r, last.c, MazeTile.END_POS.gid)
+    );
     return maze;
-  }
-
-  private static void generateOutputInCSV(MazeTile[][] maze, Path destinationFile) {
-    StringBuilder out = new StringBuilder();
-    for (int x = 0; x < maze.length; x++) {
-      for (int y = 0; y < maze[x].length; y++) {
-        out.append(maze[x][y].getGid()+",");
-      }
-      out.append('\n');
-    }
-    out.delete(out.length()-2, out.length());
-    writeFile(out.toString(), destinationFile);
-  }
-
-  private static void generateOutputInASCII(MazeTile[][] maze, Path destinationFile) {
-    StringBuilder out = new StringBuilder();
-    for (int x = 0; x < maze.length; x++) {
-      for (int y = 0; y < maze[x].length; y++) {
-        out.append(maze[x][y].getTile());
-      }
-      out.append('\n');
-    }
-    out.delete(out.length()-1, out.length());
-    writeFile(out.toString(), destinationFile);
-  }
-
-  private static void writeFile(String mazeOutput, Path destinationFile) {
-    try {
-      Files.write(destinationFile, mazeOutput.getBytes());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   @VisibleForTesting
   static boolean isPointInList(MazeTile[][] maze, Point point) {
     return point.r >= 0 && point.r < maze.length && point.c >= 0 && point.c < maze[point.r].length;
+  }
+
+  public Staircases getLastStaircases() {
+    return lastStaircases;
   }
 
   static class Point {

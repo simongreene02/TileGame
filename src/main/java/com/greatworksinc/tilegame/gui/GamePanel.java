@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.model.*;
 import com.greatworksinc.tilegame.service.MovementService;
-import com.greatworksinc.tilegame.tools.RandomBackgroundGenerator;
 import com.greatworksinc.tilegame.util.TileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +30,7 @@ public class GamePanel extends Abstract2DPanel {
   private final GridSize gridSize;
   private GridLayerFactory backgroundLayerFactory;
   private GridLayer backgroundLayer;
-  private final GridLayer foregroundLayer;
+  private Staircases staircaseLocations;
   private final ImmutableSet<Integer> exitTileIDs;
   private final int maxLevel;
   private int level;
@@ -45,9 +44,7 @@ public class GamePanel extends Abstract2DPanel {
                    MovementService movementService,
                    GridSize gridSize,
                    GridLayerFactory backgroundLayerFactory,
-                   //@MazeBackground GridDataSourceGenerator backgroundGenerator,
                    @MazeBackground GridDataSource backgroundGenerator,
-                   @MazeForeground GridDataSource foregroundGenerator,
                    ImmutableSet<Integer> exitTileIDs,
                    @MaxLevel int maxLevel) {
     this.mazeTileLoader = mazeTileLoader;
@@ -55,7 +52,6 @@ public class GamePanel extends Abstract2DPanel {
     this.characterTileLoader = characterTileLoader;
     this.movementService = movementService;
     this.backgroundLayerFactory = backgroundLayerFactory;
-    this.foregroundLayer = backgroundLayerFactory.createForegroundGridLayer(foregroundGenerator);
     this.gridSize = gridSize;
     this.exitTileIDs = exitTileIDs;
     keyListener = new GameKeyListener();
@@ -64,6 +60,7 @@ public class GamePanel extends Abstract2DPanel {
     this.maxLevel = maxLevel;
     this.backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
     this.backgroundGenerator = backgroundGenerator;
+    this.staircaseLocations = backgroundGenerator.getStaircases();
     level = 1;
   }
 
@@ -81,10 +78,13 @@ public class GamePanel extends Abstract2DPanel {
     for (int row = 0; row < gridSize.getNumOfRows(); row++) {
       for (int col = 0; col < gridSize.getNumOfCols(); col++) {
         int backgroundTile = backgroundLayer.getGidByLocation(GridLocation.of(row, col)); //Example getTileIndexAt(int rowIndex, int colIndex)
-        int foregroundTile = foregroundLayer.getGidByLocation(GridLocation.of(row, col));
+        StaircaseData downStair = staircaseLocations.getDownStair();
+        StaircaseData upStair = staircaseLocations.getUpStair();
         drawSprite(g, mazeTileLoader.getTile(backgroundTile), row, col);
-        if (foregroundTile != 0) {
-          drawSprite(g, mazeTileLoader.getTile(foregroundTile), row, col);
+        if (downStair.getRow() == row && downStair.getCol() == col) {
+          drawSprite(g, mazeTileLoader.getTile(downStair.getGid()), row, col);
+        } else if (upStair.getRow() == row && upStair.getCol() == col) {
+          drawSprite(g, mazeTileLoader.getTile(upStair.getGid()), row, col);
         }
       }
     }
@@ -109,9 +109,9 @@ public class GamePanel extends Abstract2DPanel {
   }
 
   private void checkExitCondition() {
-    GridLocation gridLocation = new GridLocation(player.getPosition().getRow(), player.getPosition().getCol());
-    log.info("PlayerForegroundTile: {}", foregroundLayer.getGidByLocation(player.getPosition()));
-    if (exitTileIDs.contains(foregroundLayer.getGidByLocation(gridLocation))) {
+    GridLocation playerLocation = player.getPosition();
+    StaircaseData downStair = staircaseLocations.getDownStair();
+    if (downStair.getRow() == playerLocation.getRow() && downStair.getCol() == playerLocation.getCol()) {
       if (level >= maxLevel) {
         if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {
           System.exit(0);
@@ -120,7 +120,8 @@ public class GamePanel extends Abstract2DPanel {
         level++; //Use this variable to generate URL for level CSV file. (return TerrainField.from(MoreResources.getResource("terrain_"+level".csv"));)
         //backgroundGenerator.generateNewMap();
         backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
-        player.setPosition(GridLocation.of(0, 0));
+        StaircaseData upStair = staircaseLocations.getUpStair();
+        player.setPosition(GridLocation.of(upStair.getRow(), upStair.getCol()));
       }
     }
   }
