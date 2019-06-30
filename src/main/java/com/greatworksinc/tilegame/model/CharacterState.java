@@ -11,18 +11,6 @@ public class CharacterState {
   private Direction direction;
   private int posture;
 
-  @Deprecated
-  public CharacterState() {
-    position = new GridLocation(0, 0);
-    spriteList = new EnumMap<>(Direction.class);
-    spriteList.put(Direction.NORTH, ImmutableList.of(85, 86, 87));
-    spriteList.put(Direction.SOUTH, ImmutableList.of(49, 50, 51));
-    spriteList.put(Direction.EAST, ImmutableList.of(73, 74, 75));
-    spriteList.put(Direction.WEST, ImmutableList.of(61, 62, 63));
-    direction = Direction.EAST;
-    posture = 0;
-  }
-
   public CharacterState(GridLocation startingPosition) {
     position = startingPosition;
     spriteList = new EnumMap<>(Direction.class);

@@ -13,7 +13,7 @@ class CharacterStateTest {
 
   @BeforeEach
   void setUp() {
-    player = new CharacterState();
+    player = new CharacterState(GridLocation.of(0, 0));
   }
 
   @Test

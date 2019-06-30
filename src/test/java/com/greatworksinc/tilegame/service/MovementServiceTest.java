@@ -37,7 +37,7 @@ class MovementServiceTest extends Mockito {
 
   @BeforeEach
   void setUp() {
-    player = new CharacterState();
+    player = new CharacterState(GridLocation.of(0, 0));
     doReturn(createGridData(GRID_SIZE, 15, GridLocation.of(2, 2), 75)).when(gridDataSource).getDataAsMap(0);
     movementService = new MovementService(INACCESSIBLE_SPRITES, gridDataSource, GRID_SIZE);
   }
