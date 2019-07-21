@@ -165,9 +165,10 @@ public class Prim {
         throw new RuntimeException("TODO: Fill in boundry check", e);
       }
 
-      // if algorithm has resolved, mark end node
+      // if algorithm has resolved, clear start and end nodes
       if (frontier.isEmpty()) {
-        //maze[last.r][last.c] = MazeTile.END_POS;
+        maze[st.r][st.c] = MazeTile.FLOOR;
+        maze[last.r][last.c] = MazeTile.FLOOR;
       }
     }
 

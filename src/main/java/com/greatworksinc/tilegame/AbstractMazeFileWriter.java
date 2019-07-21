@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public abstract class AbstractMazeFileWriter {
 
-  private int counter = 0;
+  private int counter = -1;
   protected Prim mazeGenerator;
   private Path path;
 
