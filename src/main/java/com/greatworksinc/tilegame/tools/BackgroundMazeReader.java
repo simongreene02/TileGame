@@ -38,7 +38,7 @@ public class BackgroundMazeReader implements GridDataSource {
     ImmutableList.Builder<ImmutableMap<GridLocation, Integer>> generatedMazesBuilder = ImmutableList.builder();
     ImmutableList.Builder<Staircases> staircaseLocationsBuilder = ImmutableList.builder();
     ObjectMapper objectMapper = new ObjectMapper();
-    for (int level = 1; level <= maxLevel; level++) {
+    for (int level = 0; level <= maxLevel; level++) {
       try {
         generatedMazesBuilder.add(readFile(Paths.get(
             MoreResources.getResource(String.format(fileTemplate, level)).toURI())));
@@ -85,8 +85,8 @@ public class BackgroundMazeReader implements GridDataSource {
 
   @Override
   public GridLocation getStartingLocation(int level) {
-    StaircaseData downStair = staircaseLocations.get(level).getDownStair();
-    return GridLocation.of(downStair.getRow(), downStair.getCol());
+    StaircaseData upStair = staircaseLocations.get(level).getUpStair();
+    return GridLocation.of(upStair.getRow(), upStair.getCol());
   }
 
 }

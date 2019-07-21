@@ -29,7 +29,7 @@ public abstract class AbstractMazeFileWriter {
 
   private Path destinationFile() {
     counter++;
-    return Paths.get(path.toString(), "maze" + counter + ".txt");
+    return Paths.get(path.toString(), "maze" + counter + ".csv");
   }
 
   private Path staircaseFile() {

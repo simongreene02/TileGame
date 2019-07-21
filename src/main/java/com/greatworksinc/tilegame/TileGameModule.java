@@ -177,6 +177,6 @@ public class TileGameModule extends PrivateModule {
   @Singleton
   @MaxLevel
   private int provideMaxLevel() {
-    return 1;
+    return 2;
   }
 }

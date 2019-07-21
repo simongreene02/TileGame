@@ -10,8 +10,8 @@ public class GridLayer {
   private final ImmutableMap<GridLocation, Integer> gidByLocation;
 
   @Inject
-  public GridLayer(@Assisted GridDataSource gridDataSource, GridSize gridSize) {
-    this.gidByLocation = gridDataSource.getDataAsMap(0);
+  public GridLayer(@Assisted ImmutableMap<GridLocation, Integer> gidByLocation, GridSize gridSize) {
+    this.gidByLocation = gidByLocation;
     this.gridSize = gridSize;
   }
 

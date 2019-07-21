@@ -26,8 +26,8 @@ public class MovementService {
     this.gridSize = gridSize;
   }
 
-  public boolean move(CharacterState characterState, int keyCode) {
-    ImmutableMap<GridLocation, Integer> tileLayer = tileLayerSource.getDataAsMap(0);
+  public boolean move(CharacterState characterState, int keyCode, int level) {
+    ImmutableMap<GridLocation, Integer> tileLayer = tileLayerSource.getDataAsMap(level);
 
     GridLocation finalLocation = null;
     switch (keyCode) {

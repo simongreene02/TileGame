@@ -55,7 +55,7 @@ public class GamePanel extends Abstract2DPanel {
     super.addKeyListener(keyListener);
     player = new CharacterState(backgroundGenerator.getStartingLocation(level));
     this.maxLevel = maxLevel;
-    this.backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
+    this.backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator.getDataAsMap(level));
     this.backgroundGenerator = backgroundGenerator;
     this.staircaseLocations = backgroundGenerator.getStaircases(level);
   }
@@ -98,7 +98,7 @@ public class GamePanel extends Abstract2DPanel {
   private class GameKeyListener extends KeyAdapter {
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-      movementService.move(player, keyEvent.getKeyCode());
+      movementService.move(player, keyEvent.getKeyCode(), level);
       repaint();
       checkExitCondition();
     }
@@ -108,14 +108,14 @@ public class GamePanel extends Abstract2DPanel {
     GridLocation playerLocation = player.getPosition();
     StaircaseData downStair = staircaseLocations.getDownStair();
     if (downStair.getRow() == playerLocation.getRow() && downStair.getCol() == playerLocation.getCol()) {
-      if (level >= maxLevel) {
+      level++;
+      if (level > maxLevel) {
         if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {
           System.exit(0);
         }
       } else {
-        level++; //Use this variable to generate URL for level CSV file. (return TerrainField.from(MoreResources.getResource("terrain_"+level".csv"));)
-        //backgroundGenerator.generateNewMap();
-        backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator);
+        backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator.getDataAsMap(level));
+        staircaseLocations = backgroundGenerator.getStaircases(level);
         StaircaseData upStair = staircaseLocations.getUpStair();
         player.setPosition(GridLocation.of(upStair.getRow(), upStair.getCol()));
       }

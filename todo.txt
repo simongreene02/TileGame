@@ -1,1 +1,3 @@
 -Increase test coverage.
+-Make levels actually change.
+-Finish replacing StaircaseData with GridLocation.
