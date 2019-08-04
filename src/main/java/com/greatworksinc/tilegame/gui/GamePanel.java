@@ -1,6 +1,7 @@
 package com.greatworksinc.tilegame.gui;
 
 import com.google.common.collect.ImmutableSet;
+import com.greatworksinc.tilegame.Prim;
 import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.model.*;
 import com.greatworksinc.tilegame.service.MovementService;
@@ -74,13 +75,13 @@ public class GamePanel extends Abstract2DPanel {
     for (int row = 0; row < gridSize.getNumOfRows(); row++) {
       for (int col = 0; col < gridSize.getNumOfCols(); col++) {
         int backgroundTile = backgroundLayer.getGidByLocation(GridLocation.of(row, col)); //Example getTileIndexAt(int rowIndex, int colIndex)
-        StaircaseData downStair = staircaseLocations.getDownStair();
-        StaircaseData upStair = staircaseLocations.getUpStair();
+        GridLocation downStair = staircaseLocations.getDownStair();
+        GridLocation upStair = staircaseLocations.getUpStair();
         drawSprite(g, mazeTileLoader.getTile(backgroundTile), row, col);
         if (downStair.getRow() == row && downStair.getCol() == col) {
-          drawSprite(g, mazeTileLoader.getTile(downStair.getGid()), row, col);
+          drawSprite(g, mazeTileLoader.getTile(Prim.MazeTile.END_POS.getGid()), row, col);
         } else if (upStair.getRow() == row && upStair.getCol() == col) {
-          drawSprite(g, mazeTileLoader.getTile(upStair.getGid()), row, col);
+          drawSprite(g, mazeTileLoader.getTile(Prim.MazeTile.START_POS.getGid()), row, col);
         }
       }
     }
@@ -106,8 +107,8 @@ public class GamePanel extends Abstract2DPanel {
 
   private void checkExitCondition() {
     GridLocation playerLocation = player.getPosition();
-    StaircaseData downStair = staircaseLocations.getDownStair();
-    if (downStair.getRow() == playerLocation.getRow() && downStair.getCol() == playerLocation.getCol()) {
+    GridLocation downStair = staircaseLocations.getDownStair();
+    if (playerLocation.equals(downStair)) {
       level++;
       if (level > maxLevel) {
         if (JOptionPane.showConfirmDialog(this, "Exit?") == YES_OPTION) {
@@ -116,7 +117,7 @@ public class GamePanel extends Abstract2DPanel {
       } else {
         backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator.getDataAsMap(level));
         staircaseLocations = backgroundGenerator.getStaircases(level);
-        StaircaseData upStair = staircaseLocations.getUpStair();
+        GridLocation upStair = staircaseLocations.getUpStair();
         player.setPosition(GridLocation.of(upStair.getRow(), upStair.getCol()));
       }
     }

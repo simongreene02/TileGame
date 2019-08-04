@@ -1,7 +1,7 @@
 package com.greatworksinc.tilegame;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.greatworksinc.tilegame.model.StaircaseData;
+import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.Staircases;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -18,7 +18,7 @@ import java.util.Random;
 //Taken from http://jonathanzong.com/blog/2012/11/06/maze-generation-with-prims-algorithm
 
 public class Prim {
-  enum MazeTile {
+  public enum MazeTile {
     FLOOR('-', 15),
     WALL('+', 75),
     START_POS('S', 58),
@@ -173,8 +173,8 @@ public class Prim {
     }
 
     lastStaircases = new Staircases(
-        new StaircaseData(st.r, st.c, MazeTile.START_POS.gid),
-        new StaircaseData(last.r, last.c, MazeTile.END_POS.gid)
+        GridLocation.of(st.r, st.c),
+        GridLocation.of(last.r, last.c)
     );
     return maze;
   }

@@ -7,20 +7,20 @@ import com.google.common.base.MoreObjects;
 import java.util.Objects;
 
 public class Staircases {
-  private final StaircaseData upStair;
-  private final StaircaseData downStair;
+  private final GridLocation upStair;
+  private final GridLocation downStair;
 
   @JsonCreator
-  public Staircases(@JsonProperty("upStair") StaircaseData upStair, @JsonProperty("downStair") StaircaseData downStair) {
+  public Staircases(@JsonProperty("upStair") GridLocation upStair, @JsonProperty("downStair") GridLocation downStair) {
     this.upStair = upStair;
     this.downStair = downStair;
   }
 
-  public StaircaseData getUpStair() {
+  public GridLocation getUpStair() {
     return upStair;
   }
 
-  public StaircaseData getDownStair() {
+  public GridLocation getDownStair() {
     return downStair;
   }
 

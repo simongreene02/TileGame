@@ -1,5 +1,6 @@
 package com.greatworksinc.tilegame.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
@@ -8,7 +9,7 @@ public class GridLocation {
   private final int row;
   private final int col;
 
-  public GridLocation(int row, int col) {
+  public GridLocation(@JsonProperty("row") int row, @JsonProperty("col") int col) {
     this.row = row;
     this.col = col;
   }
