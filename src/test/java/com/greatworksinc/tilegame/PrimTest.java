@@ -18,21 +18,21 @@ class PrimTest {
 
   @Test
   void isPointInList_4x1() {
-    assertThat(Prim2.isPointInList(maze, new Prim2.Point(4, 1, null))).isFalse();
+    assertThat(Prim.isPointInList(maze, new Prim.Point(4, 1, null))).isFalse();
   }
 
   @Test
   void isPointInList_negative1() {
-    assertThat(Prim2.isPointInList(maze, new Prim2.Point(-1, 1, null))).isFalse();
+    assertThat(Prim.isPointInList(maze, new Prim.Point(-1, 1, null))).isFalse();
   }
 
   @Test
   void isPointInList_1x3() {
-    assertThat(Prim2.isPointInList(maze, new Prim2.Point(1, 3, null))).isFalse();
+    assertThat(Prim.isPointInList(maze, new Prim.Point(1, 3, null))).isFalse();
   }
 
   @Test
   void isPointInList_2x2() {
-    assertThat(Prim2.isPointInList(maze, new Prim2.Point(2, 2, null))).isTrue();
+    assertThat(Prim.isPointInList(maze, new Prim.Point(2, 2, null))).isTrue();
   }
 }

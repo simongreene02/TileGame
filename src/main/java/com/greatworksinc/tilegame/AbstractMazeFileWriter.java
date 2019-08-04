@@ -10,11 +10,11 @@ import java.nio.file.Paths;
 
 public abstract class AbstractMazeFileWriter {
 
-  private int counter = -1;
-  protected Prim2 mazeGenerator;
+  private int counter;
+  protected Prim mazeGenerator;
   private Path path;
 
-  public AbstractMazeFileWriter(Prim2 mazeGenerator, Path path) {
+  public AbstractMazeFileWriter(Prim mazeGenerator, Path path) {
     this.mazeGenerator = mazeGenerator;
     this.path = path;
   }
@@ -23,13 +23,13 @@ public abstract class AbstractMazeFileWriter {
     try {
       Files.write(destinationFile(), mazeOutput().getBytes());
       Files.write(staircaseFile(), new ObjectMapper().writeValueAsString(mazeGenerator.getLastStaircases()).getBytes());
+      counter++;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
   private Path destinationFile() {
-    counter++;
     return Paths.get(path.toString(), "maze" + counter + ".csv");
   }
 
@@ -37,7 +37,7 @@ public abstract class AbstractMazeFileWriter {
     return Paths.get(path.toString(), "maze" + counter + "_stairs.json");
   }
 
-  public static AbstractMazeFileWriter createMazeFileWriter(boolean isASCII, Prim2 mazeGenerator, Path path) {
+  public static AbstractMazeFileWriter createMazeFileWriter(boolean isASCII, Prim mazeGenerator, Path path) {
     if (isASCII) {
       return new MazeWriterASCII(mazeGenerator, path);
     } else {
@@ -49,7 +49,7 @@ public abstract class AbstractMazeFileWriter {
 
   private static class MazeWriterCSV extends AbstractMazeFileWriter {
 
-    public MazeWriterCSV(Prim2 mazeGenerator, Path path) {
+    public MazeWriterCSV(Prim mazeGenerator, Path path) {
       super(mazeGenerator, path);
     }
 
@@ -63,14 +63,14 @@ public abstract class AbstractMazeFileWriter {
         }
         out.append('\n');
       }
-      out.delete(out.length()-2, out.length());
+      out.delete(out.length()-2, out.length()); //Removes comma and newline from end of file to avoid confusing interpreters.
       return out.toString();
     }
   }
 
   private static class MazeWriterASCII extends AbstractMazeFileWriter {
 
-    public MazeWriterASCII(Prim2 mazeGenerator, Path path) {
+    public MazeWriterASCII(Prim mazeGenerator, Path path) {
       super(mazeGenerator, path);
     }
 
