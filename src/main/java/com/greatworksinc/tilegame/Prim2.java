@@ -2,6 +2,7 @@ package com.greatworksinc.tilegame;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.greatworksinc.tilegame.model.GridLocation;
+import com.greatworksinc.tilegame.model.MazeTile;
 import com.greatworksinc.tilegame.model.Staircases;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -17,7 +18,7 @@ import java.util.Random;
 
 //Taken from http://jonathanzong.com/blog/2012/11/06/maze-generation-with-prims-algorithm
 
-public class Prim {
+public class Prim2 {
   private static final String ROWS_ARG = "rows";
   private static final String COLS_ARG = "columns";
   private static final String MAZES_ARG = "mazes";
@@ -46,7 +47,7 @@ public class Prim {
 
     CommandLine parsedArgs = new DefaultParser().parse(options, args);
 
-    Prim prim = new Prim(
+    Prim2 prim = new Prim2(
         Integer.parseInt(parsedArgs.getOptionValue(ROWS_ARG)),
         Integer.parseInt(parsedArgs.getOptionValue(COLS_ARG)),
         Integer.parseInt(parsedArgs.getOptionValue(SEED_ARG)));
@@ -60,11 +61,12 @@ public class Prim {
     }
   }
 
-  public Prim(int numOfRows, int numOfCols, long seed) {
+  public Prim2(int numOfRows, int numOfCols, long seed) {
     this(numOfRows, numOfCols, new Random(seed));
   }
 
-  @VisibleForTesting Prim(int numOfRows, int numOfCols, Random random) {
+  @VisibleForTesting
+  Prim2(int numOfRows, int numOfCols, Random random) {
     this.numOfRows = numOfRows;
     this.numOfCols = numOfCols;
     this.random = random;

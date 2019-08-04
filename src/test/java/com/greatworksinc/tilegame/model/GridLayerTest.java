@@ -14,24 +14,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.google.common.truth.Truth.assertThat;
 
-@ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
-class GridLayerTest extends Mockito {
+class GridLayerTest {
 
-  private @Mock GridDataSource gridDataSource;
+  private static final ImmutableMap<GridLocation, Integer> GID_BY_LOCATION = ImmutableMap.<GridLocation, Integer>builder()
+      .put(GridLocation.of(0, 0), 1)
+      .put(GridLocation.of(0, 1), 2)
+      .put(GridLocation.of(0, 2), 3)
+      .put(GridLocation.of(1, 0), 4)
+      .put(GridLocation.of(1, 1), 5)
+      .put(GridLocation.of(1, 2), 6)
+      .build();
   private GridLayer layer2x3;
 
   @BeforeEach
   void setUp() {
-    doReturn(ImmutableMap.builder()
-        .put(GridLocation.of(0, 0), 1)
-        .put(GridLocation.of(0, 1), 2)
-        .put(GridLocation.of(0, 2), 3)
-        .put(GridLocation.of(1, 0), 4)
-        .put(GridLocation.of(1, 1), 5)
-        .put(GridLocation.of(1, 2), 6)
-        .build()).when(gridDataSource).getDataAsMap(0);
-    layer2x3 = new GridLayer(gridDataSource, GridSize.of(2, 3));
+    layer2x3 = new GridLayer(GID_BY_LOCATION, GridSize.of(2, 3));
   }
 
   @Test

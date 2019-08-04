@@ -46,7 +46,7 @@ class MovementServiceTest extends Mockito {
   @MethodSource("moveLocationTestStream")
   void move_locationTest(GridLocation initLocation, int keyCode, GridLocation finalLocation, boolean expectedResult) {
     player.setPosition(initLocation);
-    assertThat(movementService.move(player, keyCode)).isEqualTo(expectedResult);
+    assertThat(movementService.move(player, keyCode, 0)).isEqualTo(expectedResult);
     assertThat(player.getPosition()).isEqualTo(finalLocation);
   }
 

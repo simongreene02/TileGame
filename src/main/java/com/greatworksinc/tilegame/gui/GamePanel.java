@@ -1,7 +1,5 @@
 package com.greatworksinc.tilegame.gui;
 
-import com.google.common.collect.ImmutableSet;
-import com.greatworksinc.tilegame.Prim;
 import com.greatworksinc.tilegame.annotations.*;
 import com.greatworksinc.tilegame.model.*;
 import com.greatworksinc.tilegame.service.MovementService;
@@ -79,9 +77,9 @@ public class GamePanel extends Abstract2DPanel {
         GridLocation upStair = staircaseLocations.getUpStair();
         drawSprite(g, mazeTileLoader.getTile(backgroundTile), row, col);
         if (downStair.getRow() == row && downStair.getCol() == col) {
-          drawSprite(g, mazeTileLoader.getTile(Prim.MazeTile.END_POS.getGid()), row, col);
+          drawSprite(g, mazeTileLoader.getTile(MazeTile.END_POS.getGid()), row, col);
         } else if (upStair.getRow() == row && upStair.getCol() == col) {
-          drawSprite(g, mazeTileLoader.getTile(Prim.MazeTile.START_POS.getGid()), row, col);
+          drawSprite(g, mazeTileLoader.getTile(MazeTile.START_POS.getGid()), row, col);
         }
       }
     }

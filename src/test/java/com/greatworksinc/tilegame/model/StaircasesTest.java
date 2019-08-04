@@ -9,8 +9,8 @@ import java.io.IOException;
 
 class StaircasesTest {
 
-  private static final String DATA = "{\"upStair\":{\"row\":0,\"col\":7,\"gid\":58},\"downStair\":{\"row\":10,\"col\":5,\"gid\":57}}";
-  private static final Staircases STAIRCASES = new Staircases(new StaircaseData(0, 7, 58), new StaircaseData(10, 5, 57));
+  private static final String DATA = "{\"upStair\":{\"row\":0,\"col\":7},\"downStair\":{\"row\":10,\"col\":5}}";
+  private static final Staircases STAIRCASES = new Staircases(GridLocation.of(0, 7), GridLocation.of(10, 5));
   private ObjectMapper objectMapper;
 
   @BeforeEach
