@@ -18,27 +18,6 @@ import java.util.Random;
 //Taken from http://jonathanzong.com/blog/2012/11/06/maze-generation-with-prims-algorithm
 
 public class Prim {
-  public enum MazeTile {
-    FLOOR('-', 15),
-    WALL('+', 75),
-    START_POS('S', 58),
-    END_POS('E', 57);
-    private char tile;
-    private int gid;
-    MazeTile(char tile, int gid) {
-      this.tile = tile;
-      this.gid = gid;
-    }
-
-    public char getTile() {
-      return tile;
-    }
-
-    public int getGid() {
-      return gid;
-    }
-  }
-
   private static final String ROWS_ARG = "rows";
   private static final String COLS_ARG = "columns";
   private static final String MAZES_ARG = "mazes";
