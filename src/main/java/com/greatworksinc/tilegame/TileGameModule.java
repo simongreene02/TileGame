@@ -135,7 +135,7 @@ public class TileGameModule extends PrivateModule {
   @Provides
   @Singleton
   private GridSize provideGridSize() {
-    return GridSize.of(11, 11);
+    return GridSize.of(20, 40);
   }
 
   @Provides
