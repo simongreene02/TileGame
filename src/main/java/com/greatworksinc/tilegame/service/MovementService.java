@@ -15,19 +15,18 @@ import static java.awt.event.KeyEvent.*;
 public class MovementService {
 
   private static final Logger log = LoggerFactory.getLogger(MovementService.class);
-  private final GridSize gridSize;
   private final ImmutableSet<Integer> inaccessibleSprites;
   private final GridDataSource tileLayerSource;
 
   @Inject
-  public MovementService(@Inaccessible ImmutableSet<Integer> inaccessibleSprites, @MazeBackground GridDataSource tileLayerSource, GridSize gridSize) {
+  public MovementService(@Inaccessible ImmutableSet<Integer> inaccessibleSprites, @MazeBackground GridDataSource tileLayerSource) {
     this.inaccessibleSprites = inaccessibleSprites;
     this.tileLayerSource = tileLayerSource;
-    this.gridSize = gridSize;
   }
 
   public boolean move(CharacterState characterState, int keyCode, int level) {
     ImmutableMap<GridLocation, Integer> tileLayer = tileLayerSource.getDataAsMap(level);
+    GridSize gridSize = tileLayerSource.getSize(level);
 
     GridLocation finalLocation = null;
     switch (keyCode) {

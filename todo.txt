@@ -1,2 +1,3 @@
 -Increase test coverage.
 -Add support for dynamic maze sizes.
+    -Add Serialization/Deserialization.

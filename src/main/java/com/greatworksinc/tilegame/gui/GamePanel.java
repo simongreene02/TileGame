@@ -26,7 +26,7 @@ public class GamePanel extends Abstract2DPanel {
   private final MovementService movementService;
   private final CharacterState player;
   private final KeyListener keyListener;
-  private final GridSize gridSize;
+  private GridSize gridSize;
   private GridLayerFactory backgroundLayerFactory;
   private GridLayer backgroundLayer;
   private Staircases staircaseLocations;
@@ -40,7 +40,6 @@ public class GamePanel extends Abstract2DPanel {
                    @Castle TileLoader castleTileLoader,
                    @CharacterSprite TileLoader characterTileLoader,
                    MovementService movementService,
-                   GridSize gridSize,
                    GridLayerFactory backgroundLayerFactory,
                    @MazeBackground GridDataSource backgroundGenerator,
                    @MaxLevel int maxLevel) {
@@ -49,7 +48,6 @@ public class GamePanel extends Abstract2DPanel {
     this.characterTileLoader = characterTileLoader;
     this.movementService = movementService;
     this.backgroundLayerFactory = backgroundLayerFactory;
-    this.gridSize = gridSize;
     keyListener = new GameKeyListener();
     super.addKeyListener(keyListener);
     player = new CharacterState(backgroundGenerator.getStartingLocation(level));
@@ -57,6 +55,7 @@ public class GamePanel extends Abstract2DPanel {
     this.backgroundLayer = backgroundLayerFactory.createBackgroundGridLayer(backgroundGenerator.getDataAsMap(level));
     this.backgroundGenerator = backgroundGenerator;
     this.staircaseLocations = backgroundGenerator.getStaircases(level);
+    this.gridSize = backgroundGenerator.getSize(level);
   }
 
   @Override
@@ -117,7 +116,12 @@ public class GamePanel extends Abstract2DPanel {
         staircaseLocations = backgroundGenerator.getStaircases(level);
         GridLocation upStair = staircaseLocations.getUpStair();
         player.setPosition(GridLocation.of(upStair.getRow(), upStair.getCol()));
+        gridSize = backgroundGenerator.getSize(level);
       }
     }
+  }
+
+  public GridSize getGridSize() {
+    return gridSize;
   }
 }

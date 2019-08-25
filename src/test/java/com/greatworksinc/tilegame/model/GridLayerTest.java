@@ -28,12 +28,7 @@ class GridLayerTest {
 
   @BeforeEach
   void setUp() {
-    layer2x3 = new GridLayer(GID_BY_LOCATION, GridSize.of(2, 3));
-  }
-
-  @Test
-  void getGridSize() {
-    assertThat(layer2x3.getGridSize()).isEqualTo(GridSize.of(2, 3));
+    layer2x3 = new GridLayer(GID_BY_LOCATION);
   }
 
   @ParameterizedTest

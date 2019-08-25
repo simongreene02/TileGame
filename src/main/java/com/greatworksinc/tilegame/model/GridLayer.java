@@ -6,17 +6,11 @@ import com.google.inject.assistedinject.Assisted;
 import javax.inject.Inject;
 
 public class GridLayer {
-  private final GridSize gridSize;
   private final ImmutableMap<GridLocation, Integer> gidByLocation;
 
   @Inject
-  public GridLayer(@Assisted ImmutableMap<GridLocation, Integer> gidByLocation, GridSize gridSize) {
+  public GridLayer(@Assisted ImmutableMap<GridLocation, Integer> gidByLocation) {
     this.gidByLocation = gidByLocation;
-    this.gridSize = gridSize;
-  }
-
-  public GridSize getGridSize() {
-    return gridSize;
   }
 
   public int getGidByLocation(GridLocation location) {

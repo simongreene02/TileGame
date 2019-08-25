@@ -10,8 +10,10 @@ import com.greatworksinc.tilegame.annotations.MaxLevel;
 import com.greatworksinc.tilegame.annotations.StairFileTemplate;
 import com.greatworksinc.tilegame.model.GridDataSource;
 import com.greatworksinc.tilegame.model.GridLocation;
+import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.model.Staircases;
 import com.greatworksinc.tilegame.util.MoreResources;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -86,6 +88,12 @@ public class BackgroundMazeReader implements GridDataSource {
   public GridLocation getStartingLocation(int level) {
     GridLocation upStair = staircaseLocations.get(level).getUpStair();
     return upStair;
+  }
+
+  @Override
+  public GridSize getSize(int level) {
+    //return GridSize.of(20, 40);
+    throw new NotImplementedException();
   }
 
 }

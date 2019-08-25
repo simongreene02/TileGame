@@ -134,12 +134,6 @@ public class TileGameModule extends PrivateModule {
 
   @Provides
   @Singleton
-  private GridSize provideGridSize() {
-    return GridSize.of(20, 40);
-  }
-
-  @Provides
-  @Singleton
   @Inaccessible
   private ImmutableSet<Integer> provideInaccessibleSpriteIDs() {
     log.info("provideInaccessibleSpriteIDs");

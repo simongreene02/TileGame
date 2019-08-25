@@ -7,6 +7,7 @@ public interface GridDataSource {
   Staircases getStaircases(int level);
 
   GridLocation getStartingLocation(int level);
+  GridSize getSize(int level);
 }
 
 
