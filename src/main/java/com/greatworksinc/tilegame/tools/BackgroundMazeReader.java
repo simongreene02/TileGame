@@ -13,7 +13,6 @@ import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.model.Staircases;
 import com.greatworksinc.tilegame.util.MoreResources;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,18 +30,22 @@ public class BackgroundMazeReader implements GridDataSource {
   /**
    * Generated level used currently. Is not final and can be mutated by the function generateNewMap
    */
-  private ImmutableList<ImmutableMap<GridLocation, Integer>> generatedMazes;
-  private ImmutableList<Staircases> staircaseLocations;
+  private final ImmutableList<ImmutableMap<GridLocation, Integer>> generatedMazes;
+  private final ImmutableList<Staircases> staircaseLocations;
+  private final ImmutableList<GridSize> gridSizes;
 
   @Inject
   public BackgroundMazeReader(@FileTemplate String fileTemplate, @StairFileTemplate String stairFileTemplate, @MaxLevel int maxLevel) {
     ImmutableList.Builder<ImmutableMap<GridLocation, Integer>> generatedMazesBuilder = ImmutableList.builder();
     ImmutableList.Builder<Staircases> staircaseLocationsBuilder = ImmutableList.builder();
+    ImmutableList.Builder<GridSize> gridSizesBuilder = ImmutableList.builder();
     ObjectMapper objectMapper = new ObjectMapper();
     for (int level = 0; level <= maxLevel; level++) {
       try {
-        generatedMazesBuilder.add(readFile(Paths.get(
-            MoreResources.getResource(String.format(fileTemplate, level)).toURI())));
+        LevelData levelData = readFile(Paths.get(
+            MoreResources.getResource(String.format(fileTemplate, level)).toURI()));
+        generatedMazesBuilder.add(levelData.gidByLocation);
+        gridSizesBuilder.add(levelData.gridSize);
         staircaseLocationsBuilder.add(objectMapper.readValue(
             Paths.get(MoreResources.getResource(String.format(stairFileTemplate, level)).toURI()).toFile(),
             Staircases.class));
@@ -50,28 +53,34 @@ public class BackgroundMazeReader implements GridDataSource {
         throw new RuntimeException(e);
       }
     }
-    generatedMazes = generatedMazesBuilder.build();
-    staircaseLocations = staircaseLocationsBuilder.build();
+    this.generatedMazes = generatedMazesBuilder.build();
+    this.staircaseLocations = staircaseLocationsBuilder.build();
+    this.gridSizes = gridSizesBuilder.build();
   }
 
   @VisibleForTesting
-  static ImmutableMap<GridLocation, Integer> readFile(Path file) {
-    ImmutableMap.Builder<GridLocation, Integer> output = ImmutableMap.builder();
+  static LevelData readFile(Path file) {
+    ImmutableMap.Builder<GridLocation, Integer> gidByLocation = ImmutableMap.builder();
+    final int numOfRows;
+    final int numOfCols;
     try {
       List<String> lines = Files.readAllLines(file);
-      for (int rowIndex = 0; rowIndex < lines.size(); rowIndex++) {
+      numOfRows = lines.size();
+      int colIndex = 0;
+      for (int rowIndex = 0; rowIndex < numOfRows; rowIndex++) {
         String row = lines.get(rowIndex);
         Iterable<String> colList = ON_COMMA.split(row);
-        int colIndex = 0;
+        colIndex = 0;
         for (String col : colList) {
-          output.put(new GridLocation(rowIndex, colIndex), Integer.parseInt(col));
+          gidByLocation.put(new GridLocation(rowIndex, colIndex), Integer.parseInt(col));
           colIndex++;
         }
       }
+      numOfCols = colIndex - 1;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return output.build();
+    return new LevelData(gidByLocation.build(), GridSize.of(numOfRows, numOfCols));
   }
 
   @Override
@@ -92,8 +101,17 @@ public class BackgroundMazeReader implements GridDataSource {
 
   @Override
   public GridSize getSize(int level) {
-    //return GridSize.of(20, 40);
-    throw new NotImplementedException();
+    return gridSizes.get(level);
+  }
+
+  private static class LevelData {
+    private final ImmutableMap<GridLocation, Integer> gidByLocation;
+    private final GridSize gridSize;
+
+    public LevelData(ImmutableMap<GridLocation, Integer> gidByLocation, GridSize gridSize) {
+      this.gidByLocation = gidByLocation;
+      this.gridSize = gridSize;
+    }
   }
 
 }
