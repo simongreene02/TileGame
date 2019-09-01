@@ -1,3 +1,9 @@
--Increase test coverage.
--Add handling for out of bounds in BackroundMazeReader (IAE).
--Add support for generating different level sizes.
+High Priority:
+-Check email.
+-Fix tests.
+-Run Jacoco on Prim, find percent (>80%).
+
+Lower Priority:
+
+-Fix staircase glitch.
+-Figure out key/door system.

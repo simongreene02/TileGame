@@ -19,3 +19,9 @@ Currently, the "buildMaze" property must be present and set to "true" to run Pri
 
     ./gradlew run -PbuildMaze=true --args="-r 7 -c 10 -m 3 -s 0 -d /home/ninja-jr/Documents/Mazes"
 
+##Problems
+
+#####Cache
+When altering data files (e.g. maze layouts), the cache files are not properly updated, which causes the program to not register changes.
+
+/home/ninja-jr/IdeaProjects/TileGame/out/production/resources

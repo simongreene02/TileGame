@@ -84,8 +84,18 @@ public class Prim {
 
   public MazeTile[][] generateMaze() {
     // dimensions of generated maze
-    int numOfRows = random.nextInt(maxRows-minRows)+minRows;
-    int numOfCols = random.nextInt(maxCols-minCols)+minCols;
+    int numOfRows;
+    if (minRows == maxRows) {
+      numOfRows = minRows;
+    } else {
+      numOfRows = random.nextInt(maxRows - minRows) + minRows;
+    }
+    int numOfCols;
+    if (minCols == maxCols) {
+      numOfCols = minCols;
+    } else {
+      numOfCols = random.nextInt(maxCols - minCols) + minCols;
+    }
     // build maze and initialize with only walls
     MazeTile[][] maze = new MazeTile[numOfRows][numOfCols];
     for (int x = 0; x < numOfRows; x++) {

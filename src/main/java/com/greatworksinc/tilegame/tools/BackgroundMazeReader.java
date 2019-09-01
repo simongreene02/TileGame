@@ -34,15 +34,21 @@ public class BackgroundMazeReader implements GridDataSource {
   private final ImmutableList<Staircases> staircaseLocations;
   private final ImmutableList<GridSize> gridSizes;
 
+  private final ObjectMapper objectMapper;
+
   @Inject
-  public BackgroundMazeReader(@FileTemplate String fileTemplate, @StairFileTemplate String stairFileTemplate, @MaxLevel int maxLevel) {
+  public BackgroundMazeReader(@FileTemplate String fileTemplate, @StairFileTemplate String stairFileTemplate, @MaxLevel int maxLevel, ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
     ImmutableList.Builder<ImmutableMap<GridLocation, Integer>> generatedMazesBuilder = ImmutableList.builder();
     ImmutableList.Builder<Staircases> staircaseLocationsBuilder = ImmutableList.builder();
     ImmutableList.Builder<GridSize> gridSizesBuilder = ImmutableList.builder();
     for (int level = 0; level <= maxLevel; level++) {
       try {
-        LevelData levelData = readFile(Paths.get(
-            MoreResources.getResource(String.format(fileTemplate, level)).toURI()));
+        Path resolvedMazeFile = Paths.get(
+            MoreResources.getResource(String.format(fileTemplate, level)).toURI());
+        Path resolvedStairFile = Paths.get(
+            MoreResources.getResource(String.format(stairFileTemplate, level)).toURI());
+        LevelData levelData = readFile(resolvedMazeFile, resolvedStairFile);
         generatedMazesBuilder.add(levelData.gidByLocation);
         gridSizesBuilder.add(levelData.gridSize);
         staircaseLocationsBuilder.add(levelData.staircaseData);
@@ -56,13 +62,13 @@ public class BackgroundMazeReader implements GridDataSource {
   }
 
   @VisibleForTesting
-  static LevelData readFile(Path file) throws IOException {
+  LevelData readFile(Path mazeFile, Path staircaseFile) throws IOException {
     ImmutableMap.Builder<GridLocation, Integer> gidByLocation = ImmutableMap.builder();
-    Staircases staircaseData = new ObjectMapper().readValue(file.toFile(), Staircases.class);
+    Staircases staircaseData = objectMapper.readValue(staircaseFile.toFile(), Staircases.class);
     final int numOfRows;
     final int numOfCols;
     try {
-      List<String> lines = Files.readAllLines(file);
+      List<String> lines = Files.readAllLines(mazeFile);
       numOfRows = lines.size();
       int colIndex = 0;
       for (int rowIndex = 0; rowIndex < numOfRows; rowIndex++) {
