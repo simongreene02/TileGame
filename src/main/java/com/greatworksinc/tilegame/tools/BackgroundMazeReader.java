@@ -39,16 +39,13 @@ public class BackgroundMazeReader implements GridDataSource {
     ImmutableList.Builder<ImmutableMap<GridLocation, Integer>> generatedMazesBuilder = ImmutableList.builder();
     ImmutableList.Builder<Staircases> staircaseLocationsBuilder = ImmutableList.builder();
     ImmutableList.Builder<GridSize> gridSizesBuilder = ImmutableList.builder();
-    ObjectMapper objectMapper = new ObjectMapper();
     for (int level = 0; level <= maxLevel; level++) {
       try {
         LevelData levelData = readFile(Paths.get(
             MoreResources.getResource(String.format(fileTemplate, level)).toURI()));
         generatedMazesBuilder.add(levelData.gidByLocation);
         gridSizesBuilder.add(levelData.gridSize);
-        staircaseLocationsBuilder.add(objectMapper.readValue(
-            Paths.get(MoreResources.getResource(String.format(stairFileTemplate, level)).toURI()).toFile(),
-            Staircases.class));
+        staircaseLocationsBuilder.add(levelData.staircaseData);
       } catch (URISyntaxException | IOException e) {
         throw new RuntimeException(e);
       }
@@ -59,8 +56,9 @@ public class BackgroundMazeReader implements GridDataSource {
   }
 
   @VisibleForTesting
-  static LevelData readFile(Path file) {
+  static LevelData readFile(Path file) throws IOException {
     ImmutableMap.Builder<GridLocation, Integer> gidByLocation = ImmutableMap.builder();
+    Staircases staircaseData = new ObjectMapper().readValue(file.toFile(), Staircases.class);
     final int numOfRows;
     final int numOfCols;
     try {
@@ -80,17 +78,25 @@ public class BackgroundMazeReader implements GridDataSource {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return new LevelData(gidByLocation.build(), GridSize.of(numOfRows, numOfCols));
+    return new LevelData(gidByLocation.build(), staircaseData, GridSize.of(numOfRows, numOfCols));
   }
 
   @Override
   public ImmutableMap<GridLocation, Integer> getDataAsMap(int level) {
-    return generatedMazes.get(level);
+    if (level < 0 || level >= generatedMazes.size()) {
+      throw new IllegalArgumentException("Value must be between 0 and " + generatedMazes.size() + ".");
+    } else {
+      return generatedMazes.get(level);
+    }
   }
 
   @Override
   public Staircases getStaircases(int level) {
-    return staircaseLocations.get(level);
+    if (level < 0 || level >= staircaseLocations.size()) {
+      throw new IllegalArgumentException("Value must be between 0 and " + staircaseLocations.size() + ".");
+    } else {
+      return staircaseLocations.get(level);
+    }
   }
 
   @Override
@@ -101,15 +107,21 @@ public class BackgroundMazeReader implements GridDataSource {
 
   @Override
   public GridSize getSize(int level) {
-    return gridSizes.get(level);
+    if (level < 0 || level >= gridSizes.size()) {
+      throw new IllegalArgumentException("Value must be between 0 and " + gridSizes.size() + ".");
+    } else {
+      return gridSizes.get(level);
+    }
   }
 
   private static class LevelData {
     private final ImmutableMap<GridLocation, Integer> gidByLocation;
+    private final Staircases staircaseData;
     private final GridSize gridSize;
 
-    public LevelData(ImmutableMap<GridLocation, Integer> gidByLocation, GridSize gridSize) {
+    public LevelData(ImmutableMap<GridLocation, Integer> gidByLocation, Staircases staircaseData, GridSize gridSize) {
       this.gidByLocation = gidByLocation;
+      this.staircaseData = staircaseData;
       this.gridSize = gridSize;
     }
   }

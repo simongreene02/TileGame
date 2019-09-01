@@ -19,15 +19,19 @@ import java.util.Random;
 //Taken from http://jonathanzong.com/blog/2012/11/06/maze-generation-with-prims-algorithm
 
 public class Prim {
-  private static final String ROWS_ARG = "rows";
-  private static final String COLS_ARG = "columns";
+  private static final String ROWS_MIN_ARG = "minRows";
+  private static final String ROWS_MAX_ARG = "maxRows";
+  private static final String COLS_MIN_ARG = "minColumns";
+  private static final String COLS_MAX_ARG = "maxColumns";
   private static final String MAZES_ARG = "mazes";
   private static final String SEED_ARG = "seed";
   private static final String DIRECTORY_ARG = "directory";
   private static final String TILEMODE_ARG = "tileMode";
 
-  private final int numOfRows;
-  private final int numOfCols;
+  private final int minRows;
+  private final int maxRows;
+  private final int minCols;
+  private final int maxCols;
 
   private final Random random;
 
@@ -37,8 +41,10 @@ public class Prim {
   public static void main(String[] args) throws IOException, ParseException {
     Options options = new Options();
 
-    options.addRequiredOption("r", ROWS_ARG, true, "The number of rows generated in each maze.");
-    options.addRequiredOption("c", COLS_ARG, true, "The number of columns generated in each maze.");
+    options.addRequiredOption("r_min", ROWS_MIN_ARG, true, "The minimum number of rows generated in each maze.");
+    options.addRequiredOption("r_max", ROWS_MAX_ARG, true, "The maximum number of rows generated in each maze.");
+    options.addRequiredOption("c_min", COLS_MIN_ARG, true, "The minimum number of columns generated in each maze.");
+    options.addRequiredOption("c_max", COLS_MAX_ARG, true, "The maximum number of columns generated in each maze.");
     options.addRequiredOption("m", MAZES_ARG, true, "The number of mazes created in maze generation.");
     options.addRequiredOption("s", SEED_ARG, true, "The random seed used in maze generation.");
     options.addRequiredOption("d", DIRECTORY_ARG, true, "The directory that maze files are saved to.");
@@ -48,9 +54,11 @@ public class Prim {
     CommandLine parsedArgs = new DefaultParser().parse(options, args);
 
     Prim prim = new Prim(
-        Integer.parseInt(parsedArgs.getOptionValue(ROWS_ARG)),
-        Integer.parseInt(parsedArgs.getOptionValue(COLS_ARG)),
-        Integer.parseInt(parsedArgs.getOptionValue(SEED_ARG)));
+        Integer.parseInt(parsedArgs.getOptionValue(ROWS_MIN_ARG)),
+        Integer.parseInt(parsedArgs.getOptionValue(ROWS_MAX_ARG)),
+        Integer.parseInt(parsedArgs.getOptionValue(COLS_MIN_ARG)),
+        Integer.parseInt(parsedArgs.getOptionValue(COLS_MAX_ARG)),
+        Long.parseLong(parsedArgs.getOptionValue(SEED_ARG)));
     int iterations = Integer.parseInt(parsedArgs.getOptionValue(MAZES_ARG));
     Path path = Paths.get(parsedArgs.getOptionValue(DIRECTORY_ARG));
     Files.createDirectories(path);
@@ -61,20 +69,23 @@ public class Prim {
     }
   }
 
-  public Prim(int numOfRows, int numOfCols, long seed) {
-    this(numOfRows, numOfCols, new Random(seed));
+
+  public Prim(int minRows, int maxRows, int minCols, int maxCols, long seed) {
+    this(minRows, maxRows, minCols, maxCols, new Random(seed));
   }
 
-  @VisibleForTesting
-  Prim(int numOfRows, int numOfCols, Random random) {
-    this.numOfRows = numOfRows;
-    this.numOfCols = numOfCols;
+  @VisibleForTesting Prim(int minRows, int maxRows, int minCols, int maxCols, Random random) {
+    this.minRows = minRows;
+    this.maxRows = maxRows;
+    this.minCols = minCols;
+    this.maxCols = maxCols;
     this.random = random;
   }
 
   public MazeTile[][] generateMaze() {
     // dimensions of generated maze
-
+    int numOfRows = random.nextInt(maxRows-minRows)+minRows;
+    int numOfCols = random.nextInt(maxCols-minCols)+minCols;
     // build maze and initialize with only walls
     MazeTile[][] maze = new MazeTile[numOfRows][numOfCols];
     for (int x = 0; x < numOfRows; x++) {
