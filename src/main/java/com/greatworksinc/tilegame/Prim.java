@@ -195,7 +195,7 @@ public class Prim {
   static class Point {
     private final int row;
     private final int col;
-    private final Point parent;
+    private final @Nullable Point parent;
 
     public Point(int row, int col, Point parent) {
       this.row = row;
@@ -203,11 +203,18 @@ public class Prim {
       this.parent = parent;
     }
 
+    public Point(int row, int col) {
+      this(row, col, null);
+    }
+
     /**
      * compute opposite node given that it is in the other direction from the parent
      * @return
      */
     public @Nullable Point opposite() {
+      if (parent == null) {
+        throw new IllegalStateException("Parent is null.");
+      }
       if (row == parent.row && col == parent.col) {
         return null;
       }
