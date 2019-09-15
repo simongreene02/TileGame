@@ -9,11 +9,13 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 //Taken from http://jonathanzong.com/blog/2012/11/06/maze-generation-with-prims-algorithm
@@ -106,7 +108,7 @@ public class Prim {
 
     // select random point and open as start node
     Point st = new Point((random.nextInt(numOfRows)), (random.nextInt(numOfCols)), null);
-    //maze[st.r][st.c] = MazeTile.START_POS;
+    //maze[st.row][st.col] = MazeTile.START_POS;
 
     // iterate through direct neighbors of node
     ArrayList<Point> frontier = new ArrayList<>();
@@ -116,14 +118,14 @@ public class Prim {
           continue;
         }
         try {
-          if (isPointInList(maze, new Point(st.r + x, st.c + y, null)) && maze[st.r + x][st.c + y] == MazeTile.FLOOR) {
+          if (isPointInList(maze, new Point(st.row + x, st.col + y, null)) && maze[st.row + x][st.col + y] == MazeTile.FLOOR) {
             continue;
           }
         } catch (Exception e) { // ignore ArrayIndexOutOfBounds
           throw new RuntimeException("TODO: Fill in boundry check", e);
         }
         // add eligible points to frontier
-        frontier.add(new Point(st.r + x, st.c + y, st));
+        frontier.add(new Point(st.row + x, st.col + y, st));
       }
     }
 
@@ -135,12 +137,12 @@ public class Prim {
       Point op = cu.opposite();
       try {
         // if both node and its opposite are walls
-        if (isPointInList(maze, cu) && maze[cu.r][cu.c] == MazeTile.WALL) {
-          if (isPointInList(maze, op) && maze[op.r][op.c] == MazeTile.WALL) {
+        if (isPointInList(maze, cu) && maze[cu.row][cu.col] == MazeTile.WALL) {
+          if (isPointInList(maze, op) && maze[op.row][op.col] == MazeTile.WALL) {
 
             // open path between the nodes
-            maze[cu.r][cu.c] = MazeTile.FLOOR;
-            maze[op.r][op.c] = MazeTile.FLOOR;
+            maze[cu.row][cu.col] = MazeTile.FLOOR;
+            maze[op.row][op.col] = MazeTile.FLOOR;
 
             // store last node in order to mark it later
             last = op;
@@ -152,13 +154,13 @@ public class Prim {
                   continue;
                 }
                 try {
-                  if (isPointInList(maze, new Point(op.r + x, op.c + y, null)) && maze[op.r + x][op.c + y] == MazeTile.FLOOR) {
+                  if (isPointInList(maze, new Point(op.row + x, op.col + y, null)) && maze[op.row + x][op.col + y] == MazeTile.FLOOR) {
                     continue;
                   }
                 } catch (Exception e) {
                   throw new RuntimeException("TODO: Fill in boundry check", e);
                 }
-                frontier.add(new Point(op.r + x, op.c + y, op));
+                frontier.add(new Point(op.row + x, op.col + y, op));
               }
             }
           }
@@ -169,21 +171,21 @@ public class Prim {
 
       // if algorithm has resolved, clear start and end nodes
       if (frontier.isEmpty()) {
-        maze[st.r][st.c] = MazeTile.FLOOR;
-        maze[last.r][last.c] = MazeTile.FLOOR;
+        maze[st.row][st.col] = MazeTile.FLOOR;
+        maze[last.row][last.col] = MazeTile.FLOOR;
       }
     }
 
     lastStaircases = new Staircases(
-        GridLocation.of(st.r, st.c),
-        GridLocation.of(last.r, last.c)
+        GridLocation.of(st.row, st.col),
+        GridLocation.of(last.row, last.col)
     );
     return maze;
   }
 
   @VisibleForTesting
   static boolean isPointInList(MazeTile[][] maze, Point point) {
-    return point.r >= 0 && point.r < maze.length && point.c >= 0 && point.c < maze[point.r].length;
+    return point.row >= 0 && point.row < maze.length && point.col >= 0 && point.col < maze[point.row].length;
   }
 
   public Staircases getLastStaircases() {
@@ -191,25 +193,55 @@ public class Prim {
   }
 
   static class Point {
-    private final Integer r;
-    private final Integer c;
+    private final int row;
+    private final int col;
     private final Point parent;
 
-    public Point(int x, int y, Point p) {
-      r = x;
-      c = y;
-      parent = p;
+    public Point(int row, int col, Point parent) {
+      this.row = row;
+      this.col = col;
+      this.parent = parent;
     }
 
-    // compute opposite node given that it is in the other direction from the parent
-    public Point opposite() {
-      if (this.r.compareTo(parent.r) != 0) {
-        return new Point(this.r + this.r.compareTo(parent.r), this.c, this);
+    /**
+     * compute opposite node given that it is in the other direction from the parent
+     * @return
+     */
+    public @Nullable Point opposite() {
+      if (row == parent.row && col == parent.col) {
+        return null;
       }
-      if (this.c.compareTo(parent.c) != 0) {
-        return new Point(this.r, this.c + this.c.compareTo(parent.c), this);
+      int newRow = row;
+      int newCol = col;
+      if (row != parent.row) {
+        if (row < parent.row) {
+          newRow--;
+        } else {
+          newRow++;
+        }
       }
-      return null;
+      if (col != parent.col) {
+        if (col < parent.col) {
+          newCol--;
+        } else {
+          newCol++;
+        }
+      }
+      return new Point(newRow, newCol, this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      Point point = (Point) o;
+      return row == point.row &&
+          col == point.col;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(row, col);
     }
   }
 }
