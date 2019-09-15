@@ -167,10 +167,13 @@ public class TileGameModule extends PrivateModule {
     return "maze%d_stairs.json";
   }
 
+  /**
+   * Value is zero-based.
+   */
   @Provides
   @Singleton
   @MaxLevel
   private int provideMaxLevel() {
-    return 2;
+    return 4;
   }
 }
