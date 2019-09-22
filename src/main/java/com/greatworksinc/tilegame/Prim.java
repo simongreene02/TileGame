@@ -87,13 +87,17 @@ public class Prim {
   public MazeTile[][] generateMaze() {
     // dimensions of generated maze
     int numOfRows;
-    if (minRows == maxRows) {
+    if (minRows > maxRows) {
+      throw new IllegalArgumentException("The minimum number of rows must be equal to or less than the maximum.");
+    } else if (minRows == maxRows) {
       numOfRows = minRows;
     } else {
       numOfRows = random.nextInt(maxRows - minRows) + minRows;
     }
     int numOfCols;
-    if (minCols == maxCols) {
+    if (minCols > maxCols) {
+      throw new IllegalArgumentException("The minimum number of cols must be equal to or less than the maximum.");
+    } else if (minCols == maxCols) {
       numOfCols = minCols;
     } else {
       numOfCols = random.nextInt(maxCols - minCols) + minCols;
