@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -22,30 +24,41 @@ class PrimTest extends Mockito {
 
   private @Mock Random random;
   private MazeTile[][] maze;
+  private MazeTile[][] mazeWithWalls;
 
   @BeforeEach
   void setUp() {
-    maze = new MazeTile[][] {{MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR}, {MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR}, {MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR}, {MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR}};
+    maze = new MazeTile[][] {
+        {MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR},
+        {MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR},
+        {MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR},
+        {MazeTile.FLOOR, MazeTile.FLOOR, MazeTile.FLOOR}};
+
+    mazeWithWalls = new MazeTile[][] {
+        {MazeTile.WALL, MazeTile.WALL, MazeTile.WALL, MazeTile.WALL},
+        {MazeTile.WALL, MazeTile.WALL, MazeTile.WALL, MazeTile.WALL},
+        {MazeTile.WALL, MazeTile.WALL, MazeTile.FLOOR, MazeTile.WALL},
+        {MazeTile.WALL, MazeTile.WALL, MazeTile.WALL, MazeTile.WALL}};
   }
 
   @Test
   void isPointInList_4x1() {
-    assertThat(Prim.isPointInList(maze, new Prim.Point(4, 1))).isFalse();
+    assertThat(Prim.isPointInMaze(maze, new Prim.Point(4, 1))).isFalse();
   }
 
   @Test
   void isPointInList_negative1() {
-    assertThat(Prim.isPointInList(maze, new Prim.Point(-1, 1))).isFalse();
+    assertThat(Prim.isPointInMaze(maze, new Prim.Point(-1, 1))).isFalse();
   }
 
   @Test
   void isPointInList_1x3() {
-    assertThat(Prim.isPointInList(maze, new Prim.Point(1, 3))).isFalse();
+    assertThat(Prim.isPointInMaze(maze, new Prim.Point(1, 3))).isFalse();
   }
 
   @Test
   void isPointInList_2x2() {
-    assertThat(Prim.isPointInList(maze, new Prim.Point(2, 2))).isTrue();
+    assertThat(Prim.isPointInMaze(maze, new Prim.Point(2, 2))).isTrue();
   }
 
   @Test
@@ -76,7 +89,7 @@ class PrimTest extends Mockito {
     for (MazeTile[] row : generatedMaze) {
       assertThat(row.length).isEqualTo(5);
     }
-    verifyZeroInteractions(random);
+    //verifyZeroInteractions(random);
   }
 
   @Test
@@ -91,5 +104,40 @@ class PrimTest extends Mockito {
     assertThrows(IllegalArgumentException.class,
         () -> new Prim(4, 4, 6, 5, random).generateMaze());
     verifyZeroInteractions(random);
+  }
+
+  @Test
+  void getAdjacentTiles_belowFloor_twoPoints() {
+    List<Prim.Point> pointList = Prim.getAdjacentPoints(mazeWithWalls, new Prim.Point(3, 2));
+    assertThat(pointList.size()).isEqualTo(2);
+    assertThat(pointList.contains(new Prim.Point(3, 0)));
+    assertThat(pointList.contains(new Prim.Point(3, 3)));
+  }
+
+  @Test
+  void getAdjacentTiles_topLeft_twoPoints() {
+    List<Prim.Point> pointList = Prim.getAdjacentPoints(mazeWithWalls, new Prim.Point(0, 0));
+    assertThat(pointList.size()).isEqualTo(2);
+    assertThat(pointList.contains(new Prim.Point(0, 1)));
+    assertThat(pointList.contains(new Prim.Point(1, 0)));
+  }
+
+  @Test
+  void getAdjacentTiles_aboveFloor_threePoints() {
+    List<Prim.Point> pointList = Prim.getAdjacentPoints(mazeWithWalls, new Prim.Point(1, 2));
+    assertThat(pointList.size()).isEqualTo(3);
+    assertThat(pointList.contains(new Prim.Point(0, 2)));
+    assertThat(pointList.contains(new Prim.Point(1, 1)));
+    assertThat(pointList.contains(new Prim.Point(1, 3)));
+  }
+
+  @Test
+  void getAdjacentTiles_middle_fourPoints() {
+    List<Prim.Point> pointList = Prim.getAdjacentPoints(mazeWithWalls, new Prim.Point(1, 1));
+    assertThat(pointList.size()).isEqualTo(4);
+    assertThat(pointList.contains(new Prim.Point(0, 1)));
+    assertThat(pointList.contains(new Prim.Point(2, 1)));
+    assertThat(pointList.contains(new Prim.Point(1, 0)));
+    assertThat(pointList.contains(new Prim.Point(1, 2)));
   }
 }

@@ -1,6 +1,7 @@
 package com.greatworksinc.tilegame;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.MazeTile;
 import com.greatworksinc.tilegame.model.Staircases;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -76,7 +78,8 @@ public class Prim {
     this(minRows, maxRows, minCols, maxCols, new Random(seed));
   }
 
-  @VisibleForTesting Prim(int minRows, int maxRows, int minCols, int maxCols, Random random) {
+  @VisibleForTesting
+  Prim(int minRows, int maxRows, int minCols, int maxCols, Random random) {
     this.minRows = minRows;
     this.maxRows = maxRows;
     this.minCols = minCols;
@@ -106,89 +109,54 @@ public class Prim {
     MazeTile[][] maze = new MazeTile[numOfRows][numOfCols];
     for (int x = 0; x < numOfRows; x++) {
       for (int y = 0; y < numOfCols; y++) {
-        maze[x][y]=MazeTile.WALL;
+        maze[x][y] = MazeTile.WALL;
       }
     }
 
     // select random point and open as start node
-    Point st = new Point((random.nextInt(numOfRows)), (random.nextInt(numOfCols)), null);
-    //maze[st.row][st.col] = MazeTile.START_POS;
+    Point startingPoint = new Point((random.nextInt(numOfRows)), (random.nextInt(numOfCols)));
+    //maze[startingPoint.row][startingPoint.col] = MazeTile.START_POS;
 
     // iterate through direct neighbors of node
-    ArrayList<Point> frontier = new ArrayList<>();
-    for (int x = -1; x <= 1; x++) {
-      for (int y = -1; y <= 1; y++) {
-        if (x == 0 && y == 0 || x != 0 && y != 0) {
-          continue;
-        }
-        try {
-          if (isPointInList(maze, new Point(st.row + x, st.col + y, null)) && maze[st.row + x][st.col + y] == MazeTile.FLOOR) {
-            continue;
-          }
-        } catch (Exception e) { // ignore ArrayIndexOutOfBounds
-          throw new RuntimeException("TODO: Fill in boundry check", e);
-        }
-        // add eligible points to frontier
-        frontier.add(new Point(st.row + x, st.col + y, st));
-      }
-    }
+    List<Point> frontier = new ArrayList<>(getAdjacentPoints(maze, startingPoint));
 
     Point last = null;
     while (!frontier.isEmpty()) {
 
       // pick current node at random
       Point cu = frontier.remove(random.nextInt(frontier.size()));
-      Point op = cu.opposite();
-      try {
+      Point oppositePoint = cu.opposite();
         // if both node and its opposite are walls
-        if (isPointInList(maze, cu) && maze[cu.row][cu.col] == MazeTile.WALL) {
-          if (isPointInList(maze, op) && maze[op.row][op.col] == MazeTile.WALL) {
+      if (isPointInMaze(maze, cu) && maze[cu.row][cu.col] == MazeTile.WALL) {
+        if (isPointInMaze(maze, oppositePoint) && maze[oppositePoint.row][oppositePoint.col] == MazeTile.WALL) {
+          // open path between the nodes
+          maze[cu.row][cu.col] = MazeTile.FLOOR;
+          maze[oppositePoint.row][oppositePoint.col] = MazeTile.FLOOR;
 
-            // open path between the nodes
-            maze[cu.row][cu.col] = MazeTile.FLOOR;
-            maze[op.row][op.col] = MazeTile.FLOOR;
+          // store last node in order to mark it later
+          last = oppositePoint;
 
-            // store last node in order to mark it later
-            last = op;
-
-            // iterate through direct neighbors of node, same as earlier
-            for (int x = -1; x <= 1; x++) {
-              for (int y = -1; y <= 1; y++) {
-                if (x == 0 && y == 0 || x != 0 && y != 0) {
-                  continue;
-                }
-                try {
-                  if (isPointInList(maze, new Point(op.row + x, op.col + y, null)) && maze[op.row + x][op.col + y] == MazeTile.FLOOR) {
-                    continue;
-                  }
-                } catch (Exception e) {
-                  throw new RuntimeException("TODO: Fill in boundry check", e);
-                }
-                frontier.add(new Point(op.row + x, op.col + y, op));
-              }
-            }
-          }
+          // iterate through direct neighbors of node, same as earlier
+          frontier.addAll(getAdjacentPoints(maze, oppositePoint));
         }
-      } catch (Exception e) { // ignore NullPointer and ArrayIndexOutOfBounds
-        throw new RuntimeException("TODO: Fill in boundry check", e);
       }
 
       // if algorithm has resolved, clear start and end nodes
       if (frontier.isEmpty()) {
-        maze[st.row][st.col] = MazeTile.FLOOR;
+        maze[startingPoint.row][startingPoint.col] = MazeTile.FLOOR;
         maze[last.row][last.col] = MazeTile.FLOOR;
       }
     }
 
     lastStaircases = new Staircases(
-        GridLocation.of(st.row, st.col),
+        GridLocation.of(startingPoint.row, startingPoint.col),
         GridLocation.of(last.row, last.col)
     );
     return maze;
   }
 
   @VisibleForTesting
-  static boolean isPointInList(MazeTile[][] maze, Point point) {
+  static boolean isPointInMaze(MazeTile[][] maze, Point point) {
     return point.row >= 0 && point.row < maze.length && point.col >= 0 && point.col < maze[point.row].length;
   }
 
@@ -196,10 +164,34 @@ public class Prim {
     return lastStaircases;
   }
 
+  private static ImmutableList<Point> getNews(Point parentPoint) {
+    return ImmutableList.of(
+        new Point(parentPoint.row - 1, parentPoint.col, parentPoint),
+        new Point(parentPoint.row, parentPoint.col - 1, parentPoint),
+        new Point(parentPoint.row + 1, parentPoint.col, parentPoint),
+        new Point(parentPoint.row, parentPoint.col + 1, parentPoint));
+  }
+
+  @VisibleForTesting
+  static ImmutableList<Point> getAdjacentPoints(MazeTile[][] maze, Point parentPoint) {
+//    ArrayList<Point> output = new ArrayList<>();
+//    for (Point adjacentPoint : getNews(parentPoint)) {
+//      if (isPointInMaze(maze, adjacentPoint) && maze[adjacentPoint.row][adjacentPoint.col] == MazeTile.WALL) {
+//        // add eligible points to frontier
+//        output.add(adjacentPoint);
+//      }
+//    }
+
+    return getNews(parentPoint).stream()
+        .filter(adjacentPoint -> isPointInMaze(maze, adjacentPoint) && maze[adjacentPoint.row][adjacentPoint.col] == MazeTile.WALL)
+        .collect(ImmutableList.toImmutableList());
+  }
+
   static class Point {
     private final int row;
     private final int col;
-    private final @Nullable Point parent;
+    private final @Nullable
+    Point parent;
 
     public Point(int row, int col, Point parent) {
       this.row = row;
@@ -213,9 +205,11 @@ public class Prim {
 
     /**
      * compute opposite node given that it is in the other direction from the parent
+     *
      * @return
      */
-    public @Nullable Point opposite() {
+    public @Nullable
+    Point opposite() {
       if (parent == null) {
         throw new IllegalStateException("Parent is null.");
       }
