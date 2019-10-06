@@ -1,6 +1,5 @@
 High Priority:
 -Check email.
--Fix level truncation.
 
 Lower Priority:
 

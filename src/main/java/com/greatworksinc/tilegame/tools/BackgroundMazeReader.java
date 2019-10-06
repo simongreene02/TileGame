@@ -80,7 +80,7 @@ public class BackgroundMazeReader implements GridDataSource {
           colIndex++;
         }
       }
-      numOfCols = colIndex - 1;
+      numOfCols = colIndex;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
