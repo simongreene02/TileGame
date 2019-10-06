@@ -115,7 +115,7 @@ public class Prim {
 
     // select random point and open as start node
     Point startingPoint = new Point((random.nextInt(numOfRows)), (random.nextInt(numOfCols)));
-    //maze[startingPoint.row][startingPoint.col] = MazeTile.START_POS;
+    maze[startingPoint.row][startingPoint.col] = MazeTile.FLOOR;
 
     // iterate through direct neighbors of node
     List<Point> frontier = new ArrayList<>(getAdjacentPoints(maze, startingPoint));
@@ -127,8 +127,8 @@ public class Prim {
       Point cu = frontier.remove(random.nextInt(frontier.size()));
       Point oppositePoint = cu.opposite();
         // if both node and its opposite are walls
-      if (isPointInMaze(maze, cu) && maze[cu.row][cu.col] == MazeTile.WALL) {
-        if (isPointInMaze(maze, oppositePoint) && maze[oppositePoint.row][oppositePoint.col] == MazeTile.WALL) {
+      if (isPointInMaze(maze, cu) && maze[cu.row][cu.col] != MazeTile.FLOOR) {
+        if (isPointInMaze(maze, oppositePoint) && maze[oppositePoint.row][oppositePoint.col] != MazeTile.FLOOR) {
           // open path between the nodes
           maze[cu.row][cu.col] = MazeTile.FLOOR;
           maze[oppositePoint.row][oppositePoint.col] = MazeTile.FLOOR;

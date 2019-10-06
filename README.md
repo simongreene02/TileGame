@@ -17,7 +17,7 @@ Currently, the "buildMaze" property must be present and set to "true" to run Pri
 
 #####Example
 
-    ./gradlew run -PbuildMaze=true --args="-r_min 10 -r_max 10 -c_min 20 -c_max 20 -m 5 -s 1 -d /home/ninja-jr/IdeaProjects/TileGame/src/main/resources"
+    ./gradlew run -PbuildMaze=true --args="-r_min 10 -r_max 10 -c_min 20 -c_max 20 -m 5 -s 1 -d /home/ninja/ws/github/TileGame/src/main/resources"
 
 ##Problems
 
