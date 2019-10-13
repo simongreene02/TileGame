@@ -20,11 +20,17 @@ Currently, the "buildMaze" property must be present and set to "true" to run Pri
 
 #####Usage
 
-    ./gradlew run -PbuildMaze=true --args="-r_min <minimum number of rows per maze> -r_max <maximum_number of rows per maze> -c_min <minimum number of columns per maze> -c_max <maximum number of columns per maze> -m <number of mazes generated> -s <random seed> -d <directory to write mazes to>"
+    ./gradlew run -PbuildMode=prim --args="-r_min <minimum number of rows per maze> -r_max <maximum_number of rows per maze> -c_min <minimum number of columns per maze> -c_max <maximum number of columns per maze> -m <number of mazes generated> -s <random seed> -d <directory to write mazes to>"
 
 #####Example
 
-    ./gradlew run -PbuildMaze=true --args="-r_min 10 -r_max 10 -c_min 20 -c_max 20 -m 5 -s 1 -d /home/ninja/ws/github/TileGame/src/main/resources"
+    ./gradlew run -PbuildMode=prim --args="-r_min 10 -r_max 10 -c_min 20 -c_max 20 -m 5 -s 1 -d /home/ninja/ws/github/TileGame/src/main/resources"
+
+##Metadata
+
+#####Usage
+
+    ./gradlew run -PbuildMode=metadata
 
 ##Problems
 

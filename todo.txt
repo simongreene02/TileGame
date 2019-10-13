@@ -1,6 +1,6 @@
 High Priority:
 -Check email.
--Create maze metadata.
+-Create lever metadata file with location ({"lever":{"row":3,"col":1}).
 
 Lower Priority:
 
