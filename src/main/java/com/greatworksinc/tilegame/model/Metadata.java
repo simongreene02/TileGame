@@ -6,12 +6,12 @@ import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
 
-public class Staircases {
+public class Metadata {
   private final GridLocation upStair;
   private final GridLocation downStair;
 
   @JsonCreator
-  public Staircases(@JsonProperty("upStair") GridLocation upStair, @JsonProperty("downStair") GridLocation downStair) {
+  public Metadata(@JsonProperty("upStair") GridLocation upStair, @JsonProperty("downStair") GridLocation downStair) {
     this.upStair = upStair;
     this.downStair = downStair;
   }
@@ -28,7 +28,7 @@ public class Staircases {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Staircases that = (Staircases) o;
+    Metadata that = (Metadata) o;
     return Objects.equals(upStair, that.upStair) &&
         Objects.equals(downStair, that.downStair);
   }

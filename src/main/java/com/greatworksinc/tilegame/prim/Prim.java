@@ -1,10 +1,10 @@
-package com.greatworksinc.tilegame;
+package com.greatworksinc.tilegame.prim;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.MazeTile;
-import com.greatworksinc.tilegame.model.Staircases;
+import com.greatworksinc.tilegame.model.Metadata;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
@@ -39,7 +39,7 @@ public class Prim {
 
   private final Random random;
 
-  private Staircases lastStaircases;
+  private Metadata lastStaircases;
 
 
   public static void main(String[] args) throws IOException, ParseException {
@@ -148,7 +148,7 @@ public class Prim {
       }
     }
 
-    lastStaircases = new Staircases(
+    lastStaircases = new Metadata(
         GridLocation.of(startingPoint.row, startingPoint.col),
         GridLocation.of(last.row, last.col)
     );
@@ -160,7 +160,7 @@ public class Prim {
     return point.row >= 0 && point.row < maze.length && point.col >= 0 && point.col < maze[point.row].length;
   }
 
-  public Staircases getLastStaircases() {
+  public Metadata getLastStaircases() {
     return lastStaircases;
   }
 

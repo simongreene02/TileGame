@@ -11,7 +11,7 @@ import com.greatworksinc.tilegame.annotations.StairFileTemplate;
 import com.greatworksinc.tilegame.model.GridDataSource;
 import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
-import com.greatworksinc.tilegame.model.Staircases;
+import com.greatworksinc.tilegame.model.Metadata;
 import com.greatworksinc.tilegame.util.MoreResources;
 
 import javax.inject.Inject;
@@ -31,7 +31,7 @@ public class BackgroundMazeReader implements GridDataSource {
    * Generated level used currently. Is not final and can be mutated by the function generateNewMap
    */
   private final ImmutableList<ImmutableMap<GridLocation, Integer>> generatedMazes;
-  private final ImmutableList<Staircases> staircaseLocations;
+  private final ImmutableList<Metadata> staircaseLocations;
   private final ImmutableList<GridSize> gridSizes;
 
   private final ObjectMapper objectMapper;
@@ -40,7 +40,7 @@ public class BackgroundMazeReader implements GridDataSource {
   public BackgroundMazeReader(@FileTemplate String fileTemplate, @StairFileTemplate String stairFileTemplate, @MaxLevel int maxLevel, ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
     ImmutableList.Builder<ImmutableMap<GridLocation, Integer>> generatedMazesBuilder = ImmutableList.builder();
-    ImmutableList.Builder<Staircases> staircaseLocationsBuilder = ImmutableList.builder();
+    ImmutableList.Builder<Metadata> staircaseLocationsBuilder = ImmutableList.builder();
     ImmutableList.Builder<GridSize> gridSizesBuilder = ImmutableList.builder();
     for (int level = 0; level <= maxLevel; level++) {
       try {
@@ -64,7 +64,7 @@ public class BackgroundMazeReader implements GridDataSource {
   @VisibleForTesting
   LevelData readFile(Path mazeFile, Path staircaseFile) throws IOException {
     ImmutableMap.Builder<GridLocation, Integer> gidByLocation = ImmutableMap.builder();
-    Staircases staircaseData = objectMapper.readValue(staircaseFile.toFile(), Staircases.class);
+    Metadata staircaseData = objectMapper.readValue(staircaseFile.toFile(), Metadata.class);
     final int numOfRows;
     final int numOfCols;
     try {
@@ -97,7 +97,7 @@ public class BackgroundMazeReader implements GridDataSource {
   }
 
   @Override
-  public Staircases getStaircases(int level) {
+  public Metadata getStaircases(int level) {
     if (level < 0 || level >= staircaseLocations.size()) {
       throw new IllegalArgumentException("Value must be between 0 and " + staircaseLocations.size() + ".");
     } else {
@@ -122,10 +122,10 @@ public class BackgroundMazeReader implements GridDataSource {
 
   private static class LevelData {
     private final ImmutableMap<GridLocation, Integer> gidByLocation;
-    private final Staircases staircaseData;
+    private final Metadata staircaseData;
     private final GridSize gridSize;
 
-    public LevelData(ImmutableMap<GridLocation, Integer> gidByLocation, Staircases staircaseData, GridSize gridSize) {
+    public LevelData(ImmutableMap<GridLocation, Integer> gidByLocation, Metadata staircaseData, GridSize gridSize) {
       this.gidByLocation = gidByLocation;
       this.staircaseData = staircaseData;
       this.gridSize = gridSize;

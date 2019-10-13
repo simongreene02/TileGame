@@ -1,7 +1,7 @@
 High Priority:
 -Check email.
+-Create maze metadata.
 
 Lower Priority:
 
--Fix staircase glitch.
 -Figure out key/door system.

@@ -10,7 +10,7 @@ import java.io.IOException;
 class StaircasesTest {
 
   private static final String DATA = "{\"upStair\":{\"row\":0,\"col\":7},\"downStair\":{\"row\":10,\"col\":5}}";
-  private static final Staircases STAIRCASES = new Staircases(GridLocation.of(0, 7), GridLocation.of(10, 5));
+  private static final Metadata STAIRCASES = new Metadata(GridLocation.of(0, 7), GridLocation.of(10, 5));
   private ObjectMapper objectMapper;
 
   @BeforeEach
@@ -20,7 +20,7 @@ class StaircasesTest {
 
   @Test
   void deserialize() throws IOException {
-    Staircases out = objectMapper.readValue(DATA, Staircases.class);
+    Metadata out = objectMapper.readValue(DATA, Metadata.class);
     Truth.assertThat(out).isEqualTo(STAIRCASES);
   }
 

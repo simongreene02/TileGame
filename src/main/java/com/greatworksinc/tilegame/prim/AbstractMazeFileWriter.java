@@ -1,4 +1,4 @@
-package com.greatworksinc.tilegame;
+package com.greatworksinc.tilegame.prim;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greatworksinc.tilegame.model.MazeTile;

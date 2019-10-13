@@ -1,7 +1,8 @@
-package com.greatworksinc.tilegame;
+package com.greatworksinc.tilegame.prim;
 
 import com.google.common.testing.EqualsTester;
 import com.greatworksinc.tilegame.model.MazeTile;
+import com.greatworksinc.tilegame.prim.Prim;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 

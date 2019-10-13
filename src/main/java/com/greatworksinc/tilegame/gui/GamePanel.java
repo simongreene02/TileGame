@@ -29,7 +29,7 @@ public class GamePanel extends Abstract2DPanel {
   private GridSize gridSize;
   private GridLayerFactory backgroundLayerFactory;
   private GridLayer backgroundLayer;
-  private Staircases staircaseLocations;
+  private Metadata staircaseLocations;
   private final int maxLevel;
   private int level; //Zero-base
   private GridDataSource backgroundGenerator;
