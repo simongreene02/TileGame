@@ -1,8 +1,15 @@
-# TileGame
+#TileGame
 To generate a test coverage report, enter
 
     ./gradlew build jacocoTestReport
 into the terminal.
+
+
+##Build
+To create an independent zip distribution file, enter
+
+    ./gradlew distZip
+
 ##Game
 No special arguments or flags are required to run the game.
 

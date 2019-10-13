@@ -14,7 +14,7 @@ sourceSets {
 }
 
 if (project.hasProperty("buildMaze") && project.getProperties().get("buildMaze")=="true") {
-    mainClassName = 'com.greatworksinc.tilegame.Prim'
+    mainClassName = 'com.greatworksinc.tilegame.prim.Prim'
 } else {
     mainClassName = 'com.greatworksinc.tilegame.Main'
 }
@@ -76,15 +76,15 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-jar {
-    baseName = 'game-tile'
-    version = '1.0.0'
-}
+//jar {
+//    baseName = 'game-tile'
+//    version = '1.0.0'
+//}
 
-jacoco {
-    toolVersion = "0.8.0"
-    reportsDir = file("$buildDir/xyz")
-}
+//jacoco {
+//    toolVersion = "0.8.0"
+//    reportsDir = file("$buildDir/xyz")
+//}
 
 jacocoTestReport {
     reports {
