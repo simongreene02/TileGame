@@ -1,5 +1,5 @@
 package com.greatworksinc.tilegame.metadata;
 
-public interface MetadataProcessor {
+public interface MetadataGenerator {
     void createMetadata();
 }
