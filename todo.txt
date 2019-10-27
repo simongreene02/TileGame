@@ -1,6 +1,9 @@
 High Priority:
 -Check email.
--Create lever metadata file with location ({"lever":{"row":3,"col":1}).
+-Study good READMEs (https://github.com/github/fetch/blob/master/README.md)
+-Update README.
+-Move data processing from DataReader to LeverMetadataGenerator.
+-Resolve TODOs.
 
 Lower Priority:
 
