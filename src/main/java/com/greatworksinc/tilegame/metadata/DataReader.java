@@ -10,7 +10,8 @@ import java.util.function.Predicate;
 
 public class DataReader {
 
-    private static final Predicate<Path> IS_MAZE_FILE = path -> path.endsWith(".csv"); //TODO: Starts with "maze"
+    private static final Predicate<Path> IS_MAZE_FILE = path -> path.toString().toLowerCase().endsWith(".csv") &&
+            path.getFileName().toString().toLowerCase().startsWith("maze");
     private final Path mazeDirectoryPath;
 
     @Inject
@@ -20,12 +21,5 @@ public class DataReader {
 
     public int getNumberOfLevels() throws IOException {
         return (int) Files.list(mazeDirectoryPath).filter(IS_MAZE_FILE).count();
-    }
-
-    public Metadata getDataForLevel(int level) {
-        //TODO: Read maze files into model object.
-        //TODO: Randomly generate location.
-        //TODO: Repeat generation if location is invalid.
-        return new Metadata(GridLocation.of(0, 0));
     }
 }
