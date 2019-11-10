@@ -30,8 +30,8 @@ High Priority:
     -Badges?
     -<details> (https://github.com/ai/size-limit#readme).
     -Tests.
-        -JUnit5.
         -Jacoco.
+        -Google Truth.
         -Mockito.
         -Temp files.
 -Resolve TODOs.

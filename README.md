@@ -1,5 +1,43 @@
 # TileGame
 
+Screenshot
+Summary/Description
+
+## Build
+
+## Download
+
+## Execution
+
+### Game Mode
+
+### Prim Mode
+
+### Metadata Mode
+
+## Features
+
+### Level Generation (using Prim)
+
+### Game Features
+
+## Technical description
+
+## Tests
+JUnit 5.
+
+### Jacoco
+
+### Google Truth
+
+### Mockito
+
+### Temp Files
+
+
+
+# TileGame
+
 To generate a test coverage report, enter
 
     ./gradlew build jacocoTestReport
@@ -11,6 +49,10 @@ into the terminal.
 To create an independent zip distribution file, enter
 
     ./gradlew distZip
+
+## Download
+
+
 
 ## Game
 
