@@ -3,17 +3,56 @@
 Screenshot
 Summary/Description
 
+TileGame, as the project is currently called, allows you to not only navigate through a randomly-generated maze, but also freely generate new mazes as well.
+
 ## Build
 
+The project can be built from the source files in one of two ways.
+
+The first is to create a standalone archive file, using either the command: 
+
+    ./gradlew distTar
+
+in order to create a tar file, or the command: 
+
+    ./gradlew distZip
+    
+to create a zip file.
+
+The archive file will be placed in the TileGame/build/distributions folder, and can be executed by running the executable script in the "bin" folder.
+
+The second method is to run the command: 
+
+    ./gradlew jar
+
+which will create a fully executable jar file in the TileGame/gradle/wrapper folder.
+
+
 ## Download
+
+Currently, there are no executable file downloads.
+
+The project source files can be downloaded through ordinary means using GitHub.
 
 ## Execution
 
 ### Game Mode
 
+To run the project in game mode, simply enter the command:
+
+    ./gradlew run
+
+without any other parameters or options, into the terminal.
+
+This will start the ordinary game mode, in which you navigate a maze that was randomly generated ahead of time.
+
 ### Prim Mode
 
+
+
 ### Metadata Mode
+
+Currently, metadata mode is not fully implemented, and cannot be run.
 
 ## Features
 
