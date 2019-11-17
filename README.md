@@ -19,13 +19,13 @@ in order to create a tar file, or the command:
     
 to create a zip file.
 
-The archive file will be placed in the TileGame/build/distributions folder, and can be executed by running the executable script in the "bin" folder.
+The archive file will be placed in the `build/distributions` folder, and can be executed by running the executable script in the "bin" folder.
 
 The second method is to run the command: 
 
     ./gradlew jar
 
-which will create a fully executable jar file in the TileGame/gradle/wrapper folder.
+which will create a fully executable jar file in the `gradle/wrapper` folder.
 
 
 ## Download
@@ -36,9 +36,14 @@ The project source files can be downloaded through ordinary means using GitHub.
 
 ## Execution
 
+There are three modes of executing the program: 1) Prim Mode to generate maze data files, 2) 
+Metadata Mode to add metadata to the maze data files, 3) Game Mode to execute the game.
+
+Note: Metadata mode is currently in progress.
+
 ### Game Mode
 
-To run the project in game mode, simply enter the command:
+To run the project in game mode, enter the command:
 
     ./gradlew run
 
@@ -48,7 +53,27 @@ This will start the ordinary game mode, in which you navigate a maze that was ra
 
 ### Prim Mode
 
+To run the project in prim mode, enter the command:
 
+    ./gradlew run -PbuildMode=prim \
+    --args="-r_min <minimum number of rows per maze> \
+            -r_max <maximum_number of rows per maze> \
+            -c_min <minimum number of columns per maze> \
+            -c_max <maximum number of columns per maze> \
+            -m <number of mazes generated> \
+            -s <random seed> \
+            -d <directory to write mazes to>"
+
+#### Example
+
+    ./gradlew run -PbuildMode=prim \
+    --args="-r_min 10 \
+            -r_max 10 \
+            -c_min 20 \
+            -c_max 20 \
+            -m 5 \
+            -s 1 \
+            -d /home/ninja/ws/github/TileGame/src/main/resources"
 
 ### Metadata Mode
 
@@ -56,73 +81,60 @@ Currently, metadata mode is not fully implemented, and cannot be run.
 
 ## Features
 
+There are two main features in the project. One of them is a maze generator that allows for the random generation of 
+files using seeds and parameters, while the other is a Swing-based application that allows users to navigate the mazes.
+
 ### Level Generation (using Prim)
+
+Reason I chose Prim, is to be able to quickly generate mazes where it is possible to navigate between any two (non-wall) 
+points. (Expand later)
 
 ### Game Features
 
+Full movement
+Collision detection
+Moving sprites with walk cycle
+Level switching
+
+
 ## Technical description
+
+Dependency Injection using Guice
+Immutability on objects where possible
+Factory pattern
+
 
 ## Tests
 JUnit 5.
 
 ### Jacoco
 
+Jacoco is a library that allows for the measuring of test coverage.
+
+Outputs can be obtained by running the command:
+
+    ./gradlew build jacocoTestReport
+    
+The reports are stored in `build/jacocoHtml/index.html`
+
 ### Google Truth
+
+Google Truth is a library that allows for fluent, more readable test assertions.
+
+EXAMPLE (find containsExactlyElementsIn)
 
 ### Mockito
 
+Mockito is a library that allows for the "mocking" dependencies.
+
+Where we used it
+
 ### Temp Files
 
+For specific tests, I used a library to create several temporary files and directories, so that the existence of those 
+files could be tested.
 
+## Known Issues
 
-# TileGame
-
-To generate a test coverage report, enter
-
-    ./gradlew build jacocoTestReport
-into the terminal.
-
-
-## Build
-
-To create an independent zip distribution file, enter
-
-    ./gradlew distZip
-
-## Download
-
-
-
-## Game
-
-No special arguments or flags are required to run the game.
-
-    ./gradlew run
-
-## Prim
-
-Currently, the "buildMaze" property must be present and set to "true" to run Prim.
-
-##### Usage
-
-    ./gradlew run -PbuildMode=prim --args="-r_min <minimum number of rows per maze> -r_max <maximum_number of rows per maze> -c_min <minimum number of columns per maze> -c_max <maximum number of columns per maze> -m <number of mazes generated> -s <random seed> -d <directory to write mazes to>"
-
-##### Example
-
-    ./gradlew run -PbuildMode=prim --args="-r_min 10 -r_max 10 -c_min 20 -c_max 20 -m 5 -s 1 -d /home/ninja/ws/github/TileGame/src/main/resources"
-
-## Metadata
-
-NOTE: This feature is currently incomplete, and cannot be performed at this time.
-
-##### Usage
-
-    ./gradlew run -PbuildMode=metadata
-
-## Problems
-
-##### Cache
-
-When altering data files (e.g. maze layouts), the cache files are not properly updated, which causes the program to not register changes.
-
-/home/ninja-jr/IdeaProjects/TileGame/out/production/resources
+- When altering data files (e.g. maze layouts), the cache files are sometimes not properly updated, which causes the 
+program to not register changes. The cache files are stored in `out/production/resources`.
