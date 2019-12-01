@@ -1,7 +1,6 @@
 # TileGame
 
-Screenshot
-Summary/Description
+[![Actions Status](https://github.com/simongreene02/TileGame/workflows/java-ci-workflow/badge.svg)](https://github.com/simongreene02/TileGame/actions)
 
 TileGame, as the project is currently called, allows you to not only navigate through a randomly-generated maze, but also freely generate new mazes as well.
 
