@@ -5,6 +5,8 @@ Summary/Description
 
 TileGame, as the project is currently called, allows you to not only navigate through a randomly-generated maze, but also freely generate new mazes as well.
 
+![alt text](images/mainScreenshot.png "Game Screenshot")
+
 ## Build
 
 The project can be built from the source files in one of two ways.
@@ -36,8 +38,10 @@ The project source files can be downloaded through ordinary means using GitHub.
 
 ## Execution
 
-There are three modes of executing the program: 1) Prim Mode to generate maze data files, 2) 
-Metadata Mode to add metadata to the maze data files, 3) Game Mode to execute the game.
+There are three modes of executing the program: 
+- Prim Mode to generate maze data files.
+- Metadata Mode to add metadata to the maze data files.
+- Game Mode to execute the game.
 
 Note: Metadata mode is currently in progress.
 
@@ -86,22 +90,27 @@ files using seeds and parameters, while the other is a Swing-based application t
 
 ### Level Generation (using Prim)
 
-Reason I chose Prim, is to be able to quickly generate mazes where it is possible to navigate between any two (non-wall) 
+The reason I chose the Prim algorithm, is to be able to quickly generate mazes where it is possible to navigate between any two (non-wall) 
 points. (Expand later)
 
 ### Game Features
 
-Full movement
-Collision detection
-Moving sprites with walk cycle
-Level switching
+- Full movement
+- Collision detection
+- Moving sprites with walk cycle
+- Level switching
+
+### Planned Features
+
+- Procedurally generated metadata files on mazes
+- Other objects and obstacles, such as levers that must be pulled in order to unlock a door.
 
 
 ## Technical description
 
-Dependency Injection using Guice
-Immutability on objects where possible
-Factory pattern
+- Dependency Injection using Guice
+- Immutability on objects where possible
+- Factory pattern
 
 
 ## Tests
