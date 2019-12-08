@@ -12,26 +12,15 @@ The project can be built from the source files in one of two ways.
 
 The first is to create a standalone archive file, using either the command: 
 
-    ./gradlew distTar
+    ./gradlew clean build
 
-in order to create a tar file, or the command: 
 
-    ./gradlew distZip
-    
-to create a zip file.
-
-The archive file will be placed in the `build/distributions` folder, and can be executed by running the executable script in the "bin" folder.
-
-The second method is to run the command: 
-
-    ./gradlew jar
-
-which will create a fully executable jar file in the `gradle/wrapper` folder.
+This will create two archive files in the `build/distributions` folder.
 
 
 ## Download
 
-Currently, there are three executable file downloads: 
+Currently, there are two downlodable archive formats which contain executables: 
 
 - [TAR executable](https://docs.google.com/uc?id=1pNcErfYGLQ-cgsitLnLyn7KvzemaSwuZ&export=download)
 - [ZIP executable](https://docs.google.com/uc?id=1CGXmqsu3aXeHxtu1B59-hNaCi_jVQoKa&export=download)

@@ -5,6 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.greatworksinc.tilegame.TileGameModule;
 import com.greatworksinc.tilegame.annotations.FileTemplate;
 import com.greatworksinc.tilegame.annotations.MaxLevel;
 import com.greatworksinc.tilegame.annotations.StairFileTemplate;
@@ -13,11 +14,14 @@ import com.greatworksinc.tilegame.model.GridLocation;
 import com.greatworksinc.tilegame.model.GridSize;
 import com.greatworksinc.tilegame.model.Metadata;
 import com.greatworksinc.tilegame.util.MoreResources;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +29,7 @@ import java.util.List;
 
 @Singleton
 public class BackgroundMazeReader implements GridDataSource {
+  private static final Logger log = LoggerFactory.getLogger(BackgroundMazeReader.class);
   private static final Splitter ON_COMMA = Splitter.on(',').trimResults().omitEmptyStrings();
 
   /**
@@ -44,15 +49,13 @@ public class BackgroundMazeReader implements GridDataSource {
     ImmutableList.Builder<GridSize> gridSizesBuilder = ImmutableList.builder();
     for (int level = 0; level <= maxLevel; level++) {
       try {
-        Path resolvedMazeFile = Paths.get(
-            MoreResources.getResource(String.format(fileTemplate, level)).toURI());
-        Path resolvedStairFile = Paths.get(
-            MoreResources.getResource(String.format(stairFileTemplate, level)).toURI());
+        URL resolvedMazeFile = MoreResources.getResource(String.format(fileTemplate, level));
+        URL resolvedStairFile = MoreResources.getResource(String.format(stairFileTemplate, level));
         LevelData levelData = readFile(resolvedMazeFile, resolvedStairFile);
         generatedMazesBuilder.add(levelData.gidByLocation);
         gridSizesBuilder.add(levelData.gridSize);
         staircaseLocationsBuilder.add(levelData.staircaseData);
-      } catch (URISyntaxException | IOException e) {
+      } catch (IOException e) {
         throw new RuntimeException(e);
       }
     }
@@ -62,13 +65,15 @@ public class BackgroundMazeReader implements GridDataSource {
   }
 
   @VisibleForTesting
-  LevelData readFile(Path mazeFile, Path staircaseFile) throws IOException {
+  LevelData readFile(URL mazeFile, URL staircaseFile) throws IOException {
     ImmutableMap.Builder<GridLocation, Integer> gidByLocation = ImmutableMap.builder();
-    Metadata staircaseData = objectMapper.readValue(staircaseFile.toFile(), Metadata.class);
+    log.warn("Reading File.");
+    Metadata staircaseData = objectMapper.readValue(staircaseFile, Metadata.class);
+    log.warn("File Read.");
     final int numOfRows;
     final int numOfCols;
     try {
-      List<String> lines = Files.readAllLines(mazeFile);
+      List<String> lines = Files.readAllLines(Paths.get(mazeFile.toURI()));
       numOfRows = lines.size();
       int colIndex = 0;
       for (int rowIndex = 0; rowIndex < numOfRows; rowIndex++) {
@@ -81,7 +86,7 @@ public class BackgroundMazeReader implements GridDataSource {
         }
       }
       numOfCols = colIndex;
-    } catch (IOException e) {
+    } catch (IOException | URISyntaxException e) {
       throw new RuntimeException(e);
     }
     return new LevelData(gidByLocation.build(), staircaseData, GridSize.of(numOfRows, numOfCols));
