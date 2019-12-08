@@ -1,22 +1,3 @@
-High Priority:
--Check email.
--Study good READMEs (https://github.com/github/fetch/blob/master/README.md)
--Update README.
-    -Create download section, after build, before game.
-        -Instructions on how to build source and run.
-    -Get something downloadable (jar/executable file).
-    -Screenshot of game.
-    -Gameplay description section.
-    -Segment on how to generate levels using Prim and metadata.
-        -Add metadata using metadata mode.
-    -Technical description, where the workings of the code are described.
-        -GUI.
-        -Key listening/pressing system.
-    -Badges?
-    -<details> (https://github.com/ai/size-limit#readme).
--Resolve TODOs.
--Get temp test files to auto-delete.
-
-Lower Priority:
-
--Figure out key/door system.
+3. Technical description, where the workings of the code are described.
+    GUI.
+    Key listening/pressing system.

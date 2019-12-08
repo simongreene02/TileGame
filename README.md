@@ -31,9 +31,14 @@ which will create a fully executable jar file in the `gradle/wrapper` folder.
 
 ## Download
 
-Currently, there are no executable file downloads.
+Currently, there are three executable file downloads: 
 
-The project source files can be downloaded through ordinary means using GitHub.
+- [TAR executable](https://docs.google.com/uc?id=1pNcErfYGLQ-cgsitLnLyn7KvzemaSwuZ&export=download)
+- [ZIP executable](https://docs.google.com/uc?id=1CGXmqsu3aXeHxtu1B59-hNaCi_jVQoKa&export=download)
+
+
+
+The project source files can also be downloaded through ordinary means using GitHub.
 
 ## Execution
 

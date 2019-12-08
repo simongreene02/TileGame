@@ -33,7 +33,6 @@ class DataReaderTest extends Mockito {
 
     @AfterEach
     void tearDown() throws IOException {
-        System.out.println("tearing down "+dir);
         MoreFiles.deleteRecursively(dir);
     }
 
