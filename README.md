@@ -25,9 +25,15 @@ Currently, there are two downlodable archive formats which contain executables:
 - [TAR executable](https://docs.google.com/uc?id=1pNcErfYGLQ-cgsitLnLyn7KvzemaSwuZ&export=download)
 - [ZIP executable](https://docs.google.com/uc?id=1CGXmqsu3aXeHxtu1B59-hNaCi_jVQoKa&export=download)
 
-
+In addition, there is a single file installer script that automatically downloads, unpacks, and runs the archive files, 
+which can be found [here](https://github.com/simongreene02/TileGame/raw/master/script/installer_script.bash).
 
 The project source files can also be downloaded through ordinary means using GitHub.
+
+## Prerequisites
+
+While the downloadable archive files are meant to be standalone, and only require the ability to run JAR files, 
+the source code requires an IDE running Gradle version XX.XX or higher.
 
 ## Execution
 

@@ -1,3 +1,4 @@
-3. Technical description, where the workings of the code are described.
+1. Technical description, where the workings of the code are described.
     GUI.
     Key listening/pressing system.
+2. Prerequisites.
